@@ -429,7 +429,7 @@ function gotoPage(p){
 function makeTrackLink(campaignId,contactId){
   // Points to /respond page — shows YES/NO buttons to the candidate
   const base=window.location.href.split('#')[0].split('?')[0].replace(/\/[^/]*$/, '');
-  return `${base}/respond?c=${campaignId}&ct=${contactId}`;
+  return `${base}/respond/?c=${campaignId}&ct=${contactId}`;
 }
 
 // Response handling is in /respond page
