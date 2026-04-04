@@ -1,1 +1,6 @@
-{}
+{
+  "rewrites": [
+    { "source": "/respond", "destination": "/respond.html" },
+    { "source": "/respond/:path*", "destination": "/respond.html" }
+  ]
+}
