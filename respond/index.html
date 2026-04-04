@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HireReach — Your Response</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0b0c0f;color:#f0f1f3;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{background:#13151a;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:44px 36px;text-align:center;max-width:420px;width:100%;animation:up .4s ease}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:30px}
+.icon-q{background:rgba(74,158,255,.1);border:2px solid rgba(74,158,255,.3)}
+.icon-yes{background:rgba(37,211,102,.1);border:2px solid rgba(37,211,102,.35)}
+.icon-no{background:rgba(255,87,87,.08);border:2px solid rgba(255,87,87,.3)}
+.icon-err{background:rgba(255,181,71,.08);border:2px solid rgba(255,181,71,.25)}
+h1{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;line-height:1.25}
+p{font-size:14px;color:#7a7f8e;line-height:1.7}
+.btn-row{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.btn{padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .2s;flex:1;max-width:180px}
+.btn:active{transform:scale(.97)}
+.btn-yes{background:#25D366;color:#000}
+.btn-yes:hover{background:#1fbc58}
+.btn-no{background:rgba(255,87,87,.1);color:#ff5757;border:1px solid rgba(255,87,87,.3)}
+.btn-no:hover{background:rgba(255,87,87,.2)}
+.spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,.07);border-top-color:#25D366;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{margin-top:28px;font-size:11px;color:#2a2d35;border-top:1px solid rgba(255,255,255,.04);padding-top:16px}
+.loading-text{font-size:14px;color:#7a7f8e}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="spinner"></div>
+  <div class="loading-text">Loading...</div>
+</div>
+<script>
+const SK = 'hirereach_v2';
+
+function sp(){ return new URLSearchParams(window.location.search); }
+
+function getParam(key){
+  // Try search params first, then hash
+  const s = new URLSearchParams(window.location.search);
+  if(s.get(key)) return s.get(key);
+  const h = new URLSearchParams(window.location.hash.replace('#','').replace('?',''));
+  return h.get(key);
+}
+
+const campaignId = getParam('c');
+const contactId  = getParam('ct');
+const nameParam  = decodeURIComponent(getParam('n') || 'there');
+const typeParam  = getParam('t'); // optional — if present, skip buttons
+
+function render(html){ document.getElementById('card').innerHTML = html + footer(); }
+function footer(){ return `<div class="footer">Powered by HireReach</div>`; }
+
+function showButtons(name){
+  render(`
+    <div class="icon icon-q">👋</div>
+    <h1>Hi ${name}!</h1>
+    <p>Are you interested in this opportunity?</p>
+    <div class="btn-row">
+      <button class="btn btn-yes" onclick="submit('yes')">✓ &nbsp;YES, I'm interested</button>
+      <button class="btn btn-no"  onclick="submit('no')">✕ &nbsp;NO, thanks</button>
+    </div>`);
+}
+
+function showDone(name, type, already){
+  const isYes = type === 'yes';
+  render(`
+    <div class="icon ${isYes ? 'icon-yes' : 'icon-no'}">${isYes ? '✓' : '✕'}</div>
+    <h1>${already ? 'Already recorded!' : (isYes ? "Great, you're in!" : "Got it!")}</h1>
+    <p>${already
+      ? `Hi ${name}, your response has already been saved.`
+      : (isYes
+        ? `Thanks ${name}! Your interest has been recorded. We'll be in touch soon. 🎉`
+        : `Thanks ${name}! We've noted you're not interested right now. No worries!`)
+    }</p>`);
+}
+
+function showError(){
+  render(`
+    <div class="icon icon-err">!</div>
+    <h1>Invalid link</h1>
+    <p>This response link appears to be invalid or expired.</p>`);
+}
+
+function submit(type){
+  if(!campaignId || !contactId){ showError(); return; }
+  // 1. Save to localStorage (works if same browser as recruiter)
+  saveToLocalStorage(campaignId, contactId, nameParam, type);
+  // 2. Save to a cross-device pending store keyed by campaign+contact
+  savePending(campaignId, contactId, nameParam, type);
+  showDone(nameParam, type, false);
+}
+
+function saveToLocalStorage(cId, ctId, name, type){
+  try{
+    const all = JSON.parse(localStorage.getItem(SK) || '[]');
+    const ci  = all.findIndex(x => x.id === cId);
+    if(ci === -1) return; // campaign not here — recruiter's browser will pick up via pending
+    const ct  = all[ci].contacts.findIndex(x => x.id === ctId);
+    if(ct > -1 && all[ci].contacts[ct].response !== 'pending') return; // already done
+    if(ct > -1){ all[ci].contacts[ct].response = type; all[ci].contacts[ct].responseSource='link'; }
+    if(!all[ci].responses) all[ci].responses = [];
+    all[ci].responses.push({ contactId:ctId, name, phone: ct>-1?all[ci].contacts[ct].phone:'', type, source:'link', time:new Date().toISOString() });
+    if(type==='yes') all[ci].yesCount = (all[ci].yesCount||0)+1;
+    else             all[ci].noCount  = (all[ci].noCount||0)+1;
+    localStorage.setItem(SK, JSON.stringify(all));
+  }catch(e){}
+}
+
+function savePending(cId, ctId, name, type){
+  try{
+    // Store in a shared pending responses list
+    // Recruiter's app checks this on open and updates dashboard
+    const key = 'hirereach_pending';
+    const pending = JSON.parse(localStorage.getItem(key) || '[]');
+    // Avoid duplicates
+    const exists = pending.find(p => p.cId===cId && p.ctId===ctId);
+    if(exists){ exists.type=type; exists.time=new Date().toISOString(); }
+    else pending.push({ cId, ctId, name, type, time:new Date().toISOString() });
+    localStorage.setItem(key, JSON.stringify(pending));
+  }catch(e){}
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', function(){
+  if(!campaignId || !contactId){
+    showError();
+    return;
+  }
+
+  // If type already in URL (direct yes/no link), skip buttons
+  if(typeParam === 'yes' || typeParam === 'no'){
+    // Check if already responded
+    try{
+      const all = JSON.parse(localStorage.getItem(SK)||'[]');
+      const camp = all.find(x=>x.id===campaignId);
+      const ct = camp?.contacts?.find(x=>x.id===contactId);
+      if(ct && ct.response !== 'pending'){
+        showDone(nameParam, ct.response, true);
+        return;
+      }
+    }catch(e){}
+    submit(typeParam);
+    return;
+  }
+
+  // No type — check if already responded in localStorage
+  try{
+    const all = JSON.parse(localStorage.getItem(SK)||'[]');
+    const camp = all.find(x=>x.id===campaignId);
+    const ct = camp?.contacts?.find(x=>x.id===contactId);
+    if(ct && ct.response !== 'pending'){
+      showDone(nameParam, ct.response, true);
+      return;
+    }
+  }catch(e){}
+
+  // Show YES/NO buttons
+  showButtons(nameParam);
+});
+</script>
+</body>
+</html>
