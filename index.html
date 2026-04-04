@@ -585,6 +585,14 @@ function downloadSample(){
    FINISH LOAD → SHOW STEP 2
 ══════════════════════════════════════════════ */
 function finishLoad(msg,sourceType,sourceMeta){
+  // Reset live dashboard counters for fresh campaign
+  sentCount=0; yesC=0; noC=0;
+  document.getElementById('mSent').textContent='0';
+  document.getElementById('mYes').textContent='0';
+  document.getElementById('mNo').textContent='0';
+  document.getElementById('mRate').textContent='—';
+  document.getElementById('notifFeed').innerHTML='<div id="emptyNote" style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No responses yet...</div>';
+  document.getElementById('sendNote').textContent='';
   const statusEl=document.getElementById(currentSource==='search'?'sStatus':'importStatus');
   if(statusEl)statusEl.innerHTML=`<div class="status-msg ok"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>${msg}</div>`;
   // Create new campaign in history
@@ -680,7 +688,9 @@ function sendAll(){
   document.getElementById('mNo').textContent=0;
   document.getElementById('mRate').textContent='—';
   document.getElementById('sendNote').textContent=`WhatsApp opened for ${list.length} contact(s)`;
-  const en=document.getElementById('emptyNote');if(en)en.textContent=`Sent to ${list.length} contacts — waiting for replies...`;
+  // Reset the live feed cleanly
+  const feed=document.getElementById('notifFeed');
+  feed.innerHTML='<div id="emptyNote" style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">Sent to '+list.length+' contacts — waiting for replies...</div>';
   // Persist send info
   const all=loadCampaigns();
   const idx=all.findIndex(c=>c.id===activeCampaignId);
@@ -699,7 +709,7 @@ function sendAll(){
    SIMULATE RESPONSE + SAVE
 ══════════════════════════════════════════════ */
 function sim(type){
-  if(!contacts.length){toast('Load contacts first','err');return;}
+  if(!contacts.length){toast('Load contacts first via Search or Excel upload','err');return;}
   const c=contacts[Math.floor(Math.random()*contacts.length)];
   recordResponse(c,type);
 }
@@ -707,30 +717,39 @@ function sim(type){
 function recordResponse(c,type){
   const isYes=type==='yes';
   if(isYes)yesC++;else noC++;
-  if(sentCount===0){sentCount=contacts.length;document.getElementById('mSent').textContent=sentCount;}
+  // If messages haven't been sent yet, use total contacts as sent count
+  if(sentCount===0){
+    sentCount=contacts.length;
+    document.getElementById('mSent').textContent=sentCount;
+  }
   const rate=Math.round(((yesC+noC)/sentCount)*100);
   document.getElementById('mYes').textContent=yesC;
   document.getElementById('mNo').textContent=noC;
   document.getElementById('mRate').textContent=rate+'%';
 
-  // Save response to campaign
+  // Save response to campaign in localStorage
   const all=loadCampaigns();
   const idx=all.findIndex(x=>x.id===activeCampaignId);
   if(idx>-1){
     all[idx].yesCount=yesC;
     all[idx].noCount=noC;
+    if(!all[idx].responses) all[idx].responses=[];
     const resp={contactId:c.id,name:c.name,phone:c.phone,type,time:new Date().toISOString()};
     all[idx].responses.push(resp);
-    // Update contact response status
+    if(!all[idx].contacts) all[idx].contacts=[];
     const ci=all[idx].contacts.findIndex(x=>x.id===c.id);
-    if(ci>-1)all[idx].contacts[ci].response=type;
+    if(ci>-1) all[idx].contacts[ci].response=type;
     saveCampaigns(all);
   }
 
+  // Update live feed
   const feed=document.getElementById('notifFeed');
-  const en=document.getElementById('emptyNote');if(en)en.remove();
+  // Remove empty state text if present
+  const en=document.getElementById('emptyNote');
+  if(en) en.remove();
   const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  const item=document.createElement('div');item.className='notif-item';
+  const item=document.createElement('div');
+  item.className='notif-item';
   item.innerHTML=`<div class="notif-ping" style="background:${isYes?'#25D366':'#ff5757'}"></div>
     <div class="notif-av">${c.initials||'??'}</div>
     <div class="notif-body">
