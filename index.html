@@ -203,17 +203,6 @@ input[type=file]::file-selector-button{background:var(--bg4);border:1px solid va
 </style>
 </head>
 <body>
-<script>
-// Fire response check ASAP before page renders — avoids flash of main UI
-(function(){
-  var raw=window.location.hash||'';
-  if(raw.indexOf('respond')!==-1){
-    // Hide body until response page takes over
-    document.documentElement.style.visibility='hidden';
-  }
-})();
-</script>
-
 <header>
   <div class="logo" onclick="gotoPage('campaign')"><span class="logo-dot"></span> HireReach</div>
   <div class="nav-tabs">
@@ -343,7 +332,7 @@ input[type=file]::file-selector-button{background:var(--bg4);border:1px solid va
       </div>
       <div>
         <div class="track-title">Auto response tracking via link</div>
-        <div class="track-desc">Each message includes a unique <b style="color:var(--accent)">[TRACK_LINK]</b> per contact. When they tap it, their YES or NO is recorded instantly in your dashboard — no WhatsApp API needed.</div>
+        <div class="track-desc">Each message includes a unique <b style="color:var(--accent)">[TRACK_LINK]</b> per contact. When they tap it, they land on a clean YES/NO page on your site — their choice is saved to your dashboard instantly.</div>
       </div>
     </div>
     <hr class="dvd"/>
@@ -437,72 +426,13 @@ function gotoPage(p){
    TRACKING LINK LOGIC
    Uses URL hash so it works on any host (no server needed)
 ════════════════════════════════ */
-function makeTrackLink(campaignId,contactId,type){
-  // Use hash format: #respond/campaignId/contactId/type
-  // Simpler format less likely to be mangled by WhatsApp link preview
-  const base=window.location.href.split('#')[0].split('?')[0];
-  return `${base}#respond?c=${campaignId}&ct=${contactId}&t=${type}`;
+function makeTrackLink(campaignId,contactId){
+  // Points to /respond page — shows YES/NO buttons to the candidate
+  const base=window.location.href.split('#')[0].split('?')[0].replace(/\/[^/]*$/, '');
+  return `${base}/respond?c=${campaignId}&ct=${contactId}`;
 }
 
-function checkIncomingResponse(){
-  // Check both hash and query string (WhatsApp sometimes converts hash to query)
-  let raw = window.location.hash || '';
-  let params;
-  if(raw.startsWith('#respond')){
-    params = new URLSearchParams(raw.replace('#respond?','').replace('#respond',''));
-  } else if(window.location.search.includes('respond')){
-    params = new URLSearchParams(window.location.search.replace('?respond?','').replace('?respond',''));
-  } else {
-    return; // not a response link
-  }
-  const cId=params.get('c'),ctId=params.get('ct'),type=params.get('t');
-  if(!cId||!ctId||!type)return;
-  // Clear URL so it doesn't re-fire on refresh
-  history.replaceState(null,'',window.location.pathname);
-  // Load campaign and record response
-  const all=loadCampaigns();
-  const campIdx=all.findIndex(x=>x.id===cId);
-  if(campIdx===-1){showResponsePage('unknown',type);return;}
-  const camp=all[campIdx];
-  const ctIdx=camp.contacts.findIndex(x=>x.id===ctId);
-  const ctName=ctIdx>-1?camp.contacts[ctIdx].name:'Someone';
-  // Only record if not already responded
-  if(ctIdx>-1&&camp.contacts[ctIdx].response!=='pending'){
-    showResponsePage(ctName,type,true);return;
-  }
-  if(ctIdx>-1)camp.contacts[ctIdx].response=type;
-  if(!camp.responses)camp.responses=[];
-  camp.responses.push({contactId:ctId,name:ctName,phone:ctIdx>-1?camp.contacts[ctIdx].phone:'',type,time:new Date().toISOString(),source:'link'});
-  if(type==='yes')camp.yesCount=(camp.yesCount||0)+1;
-  else camp.noCount=(camp.noCount||0)+1;
-  all[campIdx]=camp;
-  saveCampaigns(all);
-  // If this campaign is currently active in the dashboard, update live
-  if(activeCampaignId===cId&&ctIdx>-1){
-    const c=contacts.find(x=>x.id===ctId);
-    if(c){c.response=type;if(type==='yes')yesC++;else noC++;updateMetrics();addFeedItem(c,type,'link');updateTrackerCard(ctId,type);}
-  }
-  showResponsePage(ctName,type);
-}
-
-function showResponsePage(name,type,alreadyDone=false){
-  document.documentElement.style.visibility='';
-  document.body.innerHTML=`
-  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0b0c0f;font-family:'DM Sans',sans-serif;padding:24px">
-    <div style="background:#13151a;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:40px 32px;text-align:center;max-width:400px;width:100%">
-      <div style="width:60px;height:60px;border-radius:50%;background:${type==='yes'?'rgba(37,211,102,.12)':'rgba(255,87,87,.1)'};border:2px solid ${type==='yes'?'rgba(37,211,102,.4)':'rgba(255,87,87,.3)'};display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px">
-        ${type==='yes'?'✓':'✕'}
-      </div>
-      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#f0f1f3;margin-bottom:8px">
-        ${alreadyDone?'Already recorded!':(type==='yes'?'Great, you\'re in!':'Got it, no problem!')}
-      </div>
-      <div style="font-size:14px;color:#7a7f8e;line-height:1.6">
-        ${alreadyDone?`Hi ${name}, your response has already been recorded.`:(type==='yes'?`Thanks ${name}! Your interest has been recorded. Expect a message soon.`:`Thanks ${name}! We've noted you're not interested right now.`)}
-      </div>
-      <div style="margin-top:24px;font-size:12px;color:#444;border-top:1px solid rgba(255,255,255,.06);padding-top:16px">Powered by HireReach</div>
-    </div>
-  </div>`;
-}
+// Response handling is in /respond page
 
 /* ════════════════════════════════
    SOURCE TOGGLE
@@ -685,11 +615,11 @@ function goMsg(){setStep(3);document.getElementById('sec3').scrollIntoView({beha
    TEMPLATES
 ════════════════════════════════ */
 const TEMPLATES=[
-  {name:'Friendly & Direct',desc:'Warm, concise',build:(r,l)=>`Hi [Name]! 👋\n\nI came across your profile and I'm genuinely impressed with your background${r?` in ${r}`:''}.\n\nWe're hiring${r?` a ${r}`:''} to join our growing team${l?` in ${l}`:''}. Strong growth, great culture, competitive pay.\n\nInterested? Tap here 👉 [TRACK_LINK_YES]\nNot interested? Tap here 👉 [TRACK_LINK_NO]\n\n[Your Name]`},
-  {name:'Bold & Energetic',desc:'Startup feel',build:(r,l)=>`Hey [Name]! 🚀\n\nBig things are happening — I think you should be part of it.\n\nLooking for${r?` a ${r}`:' someone talented'}${l?` in ${l}`:''}. Fast-paced, real ownership, amazing team.\n\nTap YES 👉 [TRACK_LINK_YES]\nTap NO 👉 [TRACK_LINK_NO]\n\n[Your Name]`},
-  {name:'Formal',desc:'Professional tone',build:(r,l)=>`Dear [Name],\n\nI am reaching out regarding an exciting career opportunity${r?` for a ${r}`:''}${l?` in ${l}`:''}.\n\nKindly indicate your interest:\nYES 👉 [TRACK_LINK_YES]\nNO 👉 [TRACK_LINK_NO]\n\nBest regards,\n[Your Name]`},
-  {name:'Short & Punchy',desc:'High response rate',build:(r,l)=>`Hi [Name] 👋 Quick one — open to a${r?` ${r}`:' new role'}${l?` in ${l}`:''}?\n\nYES 👉 [TRACK_LINK_YES]\nNO 👉 [TRACK_LINK_NO]\n\n[Your Name]`},
-  {name:'Value-First',desc:'Lead with benefits',build:(r,l)=>`Hi [Name], better pay + amazing team + real growth? 💼\n\nHiring${r?` a ${r}`:''}${l?` in ${l}`:''}.\n\nInterested? 👉 [TRACK_LINK_YES]\nNot now? 👉 [TRACK_LINK_NO]\n\n[Your Name]`}
+  {name:'Friendly & Direct',desc:'Warm, concise',build:(r,l)=>`Hi [Name]! 👋\n\nI came across your profile and I'm genuinely impressed with your background${r?` in ${r}`:''}.\n\nWe're hiring${r?` a ${r}`:''} to join our growing team${l?` in ${l}`:''}. Strong growth, great culture, competitive pay.\n\nTap here to respond 👉 [TRACK_LINK]\n\n[Your Name]`},
+  {name:'Bold & Energetic',desc:'Startup feel',build:(r,l)=>`Hey [Name]! 🚀\n\nBig things are happening — I think you should be part of it.\n\nLooking for${r?` a ${r}`:' someone talented'}${l?` in ${l}`:''}. Fast-paced, real ownership, amazing team.\n\nTap to respond 👉 [TRACK_LINK]\n\n[Your Name]`},
+  {name:'Formal',desc:'Professional tone',build:(r,l)=>`Dear [Name],\n\nI am reaching out regarding an exciting career opportunity${r?` for a ${r}`:''}${l?` in ${l}`:''}.\n\nKindly tap to indicate your interest 👉 [TRACK_LINK]\n\nBest regards,\n[Your Name]`},
+  {name:'Short & Punchy',desc:'High response rate',build:(r,l)=>`Hi [Name] 👋 Quick one — open to a${r?` ${r}`:' new role'}${l?` in ${l}`:''}?\n\nTap to respond 👉 [TRACK_LINK]\n\n[Your Name]`},
+  {name:'Value-First',desc:'Lead with benefits',build:(r,l)=>`Hi [Name], better pay + amazing team + real growth? 💼\n\nHiring${r?` a ${r}`:''}${l?` in ${l}`:''}.\n\nTap to respond 👉 [TRACK_LINK]\n\n[Your Name]`}
 ];
 function renderTemplates(){
   const g=document.getElementById('tplGrid');g.innerHTML='';
@@ -717,13 +647,12 @@ function sendAll(){
   document.getElementById('notifFeed').innerHTML='<div id="emptyNote" style="font-size:13px;color:var(--muted);padding:10px 0;text-align:center">Sent to '+list.length+' contacts — waiting for replies...</div>';
   list.forEach(c=>{
     // Build personalised message with tracking links
-    const yesLink=makeTrackLink(activeCampaignId,c.id,'yes');
-    const noLink=makeTrackLink(activeCampaignId,c.id,'no');
+    const trackLink=makeTrackLink(activeCampaignId,c.id);
     let text=msgTemplate
       .replace(/\[Name\]/gi,c.name.split(' ')[0])
-      .replace(/\[TRACK_LINK_YES\]/g,yesLink)
-      .replace(/\[TRACK_LINK_NO\]/g,noLink)
-      .replace(/\[TRACK_LINK\]/g,yesLink); // fallback
+      .replace(/\[TRACK_LINK_YES\]/g,trackLink)
+      .replace(/\[TRACK_LINK_NO\]/g,trackLink)
+      .replace(/\[TRACK_LINK\]/g,trackLink);
     const phone=c.phone.replace(/\s+/g,'').replace('+','');
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,'_blank');
   });
@@ -937,6 +866,48 @@ function exportHistory(){
 }
 
 /* ════════════════════════════════
+   PICK UP PENDING RESPONSES from /respond page
+════════════════════════════════ */
+function applyPendingResponses(){
+  try{
+    const pending=JSON.parse(localStorage.getItem('hirereach_pending')||'[]');
+    if(!pending.length)return;
+    const all=loadCampaigns();
+    let changed=false;
+    pending.forEach(p=>{
+      const ci=all.findIndex(x=>x.id===p.cId);
+      if(ci===-1)return;
+      const ctI=all[ci].contacts.findIndex(x=>x.id===p.ctId);
+      if(ctI===-1)return;
+      if(all[ci].contacts[ctI].response!=='pending')return;
+      all[ci].contacts[ctI].response=p.type;
+      all[ci].contacts[ctI].responseSource='link';
+      if(!all[ci].responses)all[ci].responses=[];
+      all[ci].responses.push({contactId:p.ctId,name:all[ci].contacts[ctI].name,phone:all[ci].contacts[ctI].phone,type:p.type,source:'link',time:p.time});
+      if(p.type==='yes')all[ci].yesCount=(all[ci].yesCount||0)+1;
+      else all[ci].noCount=(all[ci].noCount||0)+1;
+      // If this is the active campaign, update live UI
+      if(activeCampaignId===p.cId){
+        const c=contacts.find(x=>x.id===p.ctId);
+        if(c){
+          c.response=p.type;c.responseSource='link';
+          if(p.type==='yes')yesC++;else noC++;
+          updateMetrics();
+          document.getElementById('mSent').textContent=sentCount||contacts.length;
+          addFeedItem(c,p.type,'link');
+          updateTrackerCard(p.ctId,p.type);
+        }
+      }
+      changed=true;
+    });
+    if(changed){
+      saveCampaigns(all);
+      localStorage.removeItem('hirereach_pending');
+    }
+  }catch(e){}
+}
+
+/* ════════════════════════════════
    HELPERS
 ════════════════════════════════ */
 function setStep(n){for(let i=1;i<=4;i++){const e=document.getElementById('si'+i);e.classList.remove('active','done');if(i<n)e.classList.add('done');else if(i===n)e.classList.add('active');}}
@@ -956,9 +927,9 @@ uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');co
 ════════════════════════════════ */
 // Run after full DOM + scripts loaded
 window.addEventListener('DOMContentLoaded', function(){
-  document.documentElement.style.visibility=''; // restore if hidden
   updateHistBadge();
-  checkIncomingResponse();
+  // Check for pending responses recorded by /respond page
+  applyPendingResponses();
 });
 </script>
 </body>
