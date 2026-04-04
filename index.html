@@ -1,375 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>HireReach — WhatsApp Recruitment Outreach</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg:      #0b0c0f;
-    --bg2:     #13151a;
-    --bg3:     #1c1f27;
-    --bg4:     #252930;
-    --border:  rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.13);
-    --text:    #f0f1f3;
-    --muted:   #7a7f8e;
-    --accent:  #25D366;
-    --accent2: #1fbc58;
-    --info:    #4a9eff;
-    --danger:  #ff5757;
-    --warn:    #ffb547;
-    --r:  10px;
-    --r2: 14px;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.6;
-  }
+:root{
+  --bg:#0b0c0f;--bg2:#13151a;--bg3:#1c1f27;--bg4:#252930;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#f0f1f3;--muted:#7a7f8e;
+  --accent:#25D366;--accent2:#1fbc58;
+  --info:#4a9eff;--danger:#ff5757;--warn:#ffb547;
+  --r:10px;--r2:14px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
 
-  /* HEADER */
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 32px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
-  .server-badge {
-    font-size: 11px;
-    background: rgba(37,211,102,0.1);
-    color: var(--accent);
-    border: 1px solid rgba(37,211,102,0.2);
-    border-radius: 6px;
-    padding: 4px 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .server-badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    display: inline-block;
-    animation: blink 2s ease-in-out infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100}
+.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
+.free-badge{font-size:11px;background:rgba(37,211,102,0.1);color:var(--accent);border:1px solid rgba(37,211,102,0.25);border-radius:6px;padding:4px 12px;display:flex;align-items:center;gap:6px;font-weight:500}
+.free-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-  /* MAIN */
-  main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+/* MAIN */
+main{max-width:1100px;margin:0 auto;padding:36px 24px 80px}
 
-  /* STEPS */
-  .steps {
-    display: flex;
-    align-items: center;
-    margin-bottom: 40px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .step-item { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .step-num {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border2);
-    color: var(--muted);
-    font-size: 12px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.3s;
-    font-family: 'Syne', sans-serif;
-  }
-  .step-item.active .step-num { border-color: var(--accent); color: var(--accent); background: rgba(37,211,102,0.08); }
-  .step-item.done .step-num   { border-color: var(--accent); background: var(--accent); color: #000; }
-  .step-label { font-size: 13px; color: var(--muted); transition: color 0.3s; white-space: nowrap; }
-  .step-item.active .step-label,
-  .step-item.done .step-label  { color: var(--text); }
-  .step-line { width: 36px; height: 1px; background: var(--border2); margin: 0 4px; flex-shrink: 0; }
+/* STEPS */
+.steps{display:flex;align-items:center;margin-bottom:36px;overflow-x:auto;padding-bottom:4px;gap:0}
+.step-item{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.step-num{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);color:var(--muted);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .3s;font-family:'Syne',sans-serif}
+.step-item.active .step-num{border-color:var(--accent);color:var(--accent);background:rgba(37,211,102,.08)}
+.step-item.done .step-num{border-color:var(--accent);background:var(--accent);color:#000}
+.step-label{font-size:13px;color:var(--muted);transition:color .3s;white-space:nowrap}
+.step-item.active .step-label,.step-item.done .step-label{color:var(--text)}
+.step-line{width:36px;height:1px;background:var(--border2);margin:0 4px;flex-shrink:0}
 
-  /* SECTION CARDS */
-  .section {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--r2);
-    padding: 28px;
-    margin-bottom: 20px;
-    display: none;
-    animation: fadeUp 0.35s ease;
-  }
-  .section.visible { display: block; }
-  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+/* SECTIONS */
+.section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:28px;margin-bottom:20px;display:none;animation:fadeUp .35s ease}
+.section.visible{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.section-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
+.s-badge{width:24px;height:24px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif}
+.hint{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.55}
 
-  .section-head {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    flex-wrap: wrap; gap: 10px;
-  }
-  .section-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 17px; font-weight: 700;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .s-badge {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    background: rgba(37,211,102,0.1);
-    border: 1px solid rgba(37,211,102,0.3);
-    color: var(--accent);
-    font-size: 11px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Syne', sans-serif;
-  }
-  .hint { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.55; }
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11px;color:var(--muted);font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+input,select,textarea{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:11px 14px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:rgba(37,211,102,.5);box-shadow:0 0 0 3px rgba(37,211,102,.07)}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+select option{background:var(--bg3)}
+textarea{resize:vertical;line-height:1.7}
 
-  /* FORMS */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    margin-bottom: 18px;
-  }
-  @media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
-  .field { display: flex; flex-direction: column; gap: 6px; }
-  .field label { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: 0.3px; text-transform: uppercase; }
-  input, select, textarea {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: var(--r);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    padding: 11px 14px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-  }
-  input:focus, select:focus, textarea:focus {
-    border-color: rgba(37,211,102,0.5);
-    box-shadow: 0 0 0 3px rgba(37,211,102,0.07);
-  }
-  input::placeholder, textarea::placeholder { color: var(--muted); }
-  select option { background: var(--bg3); }
-  textarea { resize: vertical; line-height: 1.7; }
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:all .2s;white-space:nowrap;user-select:none}
+.btn:hover{background:var(--bg4)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--accent);color:#000;border-color:transparent;font-weight:600}
+.btn-primary:hover{background:var(--accent2)}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-ghost{background:transparent;border-color:var(--border);color:var(--muted)}
+.btn-ghost:hover{color:var(--text);background:var(--bg3)}
+.btn-danger{background:rgba(255,87,87,.1);border-color:rgba(255,87,87,.25);color:var(--danger)}
+.btn-danger:hover{background:rgba(255,87,87,.18)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
-  /* BUTTONS */
-  .btn {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 10px 20px;
-    border-radius: var(--r);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--border2);
-    background: var(--bg3);
-    color: var(--text);
-    transition: all 0.2s;
-    white-space: nowrap;
-    user-select: none;
-  }
-  .btn:hover   { background: var(--bg4); }
-  .btn:active  { transform: scale(0.97); }
-  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-  .btn-primary { background: var(--accent); color: #000; border-color: transparent; font-weight: 600; }
-  .btn-primary:hover { background: var(--accent2); }
-  .btn-sm   { padding: 7px 14px; font-size: 13px; }
-  .btn-ghost { background: transparent; border-color: var(--border); color: var(--muted); }
-  .btn-ghost:hover { color: var(--text); background: var(--bg3); }
-  .btn-danger { background: rgba(255,87,87,0.1); border-color: rgba(255,87,87,0.25); color: var(--danger); }
-  .btn-danger:hover { background: rgba(255,87,87,0.18); }
-  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+/* LOADER */
+.loader{display:flex;gap:5px;align-items:center}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pu 1.2s ease-in-out infinite}
+.ldot:nth-child(2){animation-delay:.2s}.ldot:nth-child(3){animation-delay:.4s}
+@keyframes pu{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.status-msg{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
+.status-msg.ok{color:var(--accent)}.status-msg.err{color:var(--danger)}
 
-  /* LOADER */
-  .loader { display: flex; gap: 5px; align-items: center; }
-  .ldot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pu 1.2s ease-in-out infinite; }
-  .ldot:nth-child(2){animation-delay:.2s} .ldot:nth-child(3){animation-delay:.4s}
-  @keyframes pu{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
-  .status-msg { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
-  .status-msg.ok  { color: var(--accent); }
-  .status-msg.err { color: var(--danger); }
+/* CANDIDATE GRID */
+.cand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:16px}
+.cand-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;position:relative;transition:border-color .18s,background .18s;user-select:none}
+.cand-card:hover{border-color:var(--border2)}
+.cand-card.sel{border-color:rgba(37,211,102,.45);background:rgba(37,211,102,.04)}
+.cand-av{width:38px;height:38px;border-radius:50%;background:rgba(74,158,255,.12);border:1px solid rgba(74,158,255,.22);color:var(--info);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-family:'Syne',sans-serif}
+.cand-name{font-size:13px;font-weight:600;margin-bottom:3px;font-family:'Syne',sans-serif}
+.cand-meta{font-size:12px;color:var(--muted);margin-bottom:1px}
+.cand-phone{font-size:12px;color:var(--info);margin-top:8px;font-weight:500}
+.skill-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.skill-tag{font-size:11px;padding:2px 7px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--muted)}
+.cand-chk{position:absolute;top:12px;right:12px;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .15s}
+.cand-card.sel .cand-chk{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
 
-  /* CANDIDATE GRID */
-  .cand-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 12px;
-    margin-top: 16px;
-  }
-  .cand-card {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 14px 14px 12px;
-    cursor: pointer;
-    position: relative;
-    transition: border-color 0.18s, background 0.18s;
-    user-select: none;
-  }
-  .cand-card:hover { border-color: var(--border2); }
-  .cand-card.sel   { border-color: rgba(37,211,102,0.45); background: rgba(37,211,102,0.04); }
-  .cand-av {
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    background: rgba(74,158,255,0.12);
-    border: 1px solid rgba(74,158,255,0.22);
-    color: var(--info);
-    font-size: 13px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 10px;
-    font-family: 'Syne', sans-serif;
-  }
-  .cand-name { font-size: 13px; font-weight: 600; margin-bottom: 3px; font-family: 'Syne', sans-serif; }
-  .cand-meta { font-size: 12px; color: var(--muted); margin-bottom: 1px; }
-  .cand-phone { font-size: 12px; color: var(--info); margin-top: 8px; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
-  .skill-tag {
-    font-size: 11px; padding: 2px 7px;
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    color: var(--muted);
-  }
-  .cand-chk {
-    position: absolute; top: 12px; right: 12px;
-    width: 18px; height: 18px;
-    border-radius: 5px;
-    border: 1.5px solid var(--border2);
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; color: transparent;
-    transition: all 0.15s;
-  }
-  .cand-card.sel .cand-chk { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
+/* TEMPLATE PICKER */
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.tpl-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:border-color .15s}
+.tpl-card:hover{border-color:var(--border2)}
+.tpl-card.active{border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.04)}
+.tpl-name{font-size:13px;font-weight:500;margin-bottom:3px}
+.tpl-desc{font-size:11px;color:var(--muted)}
 
-  /* DIVIDER */
-  .dvd { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+/* DIVIDER */
+.dvd{border:none;border-top:1px solid var(--border);margin:22px 0}
 
-  /* MESSAGE */
-  #msgEd { min-height: 185px; font-size: 14px; line-height: 1.75; }
-  .msg-tip {
-    font-size: 12px; color: var(--muted);
-    background: rgba(74,158,255,0.05);
-    border: 1px solid rgba(74,158,255,0.12);
-    border-radius: 8px;
-    padding: 11px 15px;
-    margin-top: 14px;
-    line-height: 1.55;
-  }
-  .msg-tip b { color: var(--info); font-weight: 500; }
+/* MESSAGE */
+#msgEd{min-height:185px;font-size:14px;line-height:1.75}
+.msg-tip{font-size:12px;color:var(--muted);background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.12);border-radius:8px;padding:11px 15px;margin-top:14px;line-height:1.55}
+.msg-tip b{color:var(--info);font-weight:500}
 
-  /* METRICS */
-  .metrics {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-  @media(max-width:640px){ .metrics { grid-template-columns: repeat(2,1fr); } }
-  .met {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 16px;
-    text-align: center;
-  }
-  .met-label { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  .met-value { font-size: 26px; font-weight: 700; font-family: 'Syne', sans-serif; }
-  .green { color: var(--accent); }
-  .red   { color: var(--danger); }
-  .blue  { color: var(--info); }
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:640px){.metrics{grid-template-columns:repeat(2,1fr)}}
+.met{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
+.met-label{font-size:12px;color:var(--muted);margin-bottom:6px}
+.met-value{font-size:26px;font-weight:700;font-family:'Syne',sans-serif}
+.green{color:var(--accent)}.red{color:var(--danger)}.blue{color:var(--info)}
 
-  /* NOTIF FEED */
-  .notif-item {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-    animation: fadeUp 0.3s ease;
-  }
-  .notif-item:last-child { border-bottom: none; }
-  .notif-ping { width: 9px; height: 9px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
-  .notif-av {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: rgba(74,158,255,0.1);
-    color: var(--info);
-    font-size: 12px; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    font-family: 'Syne', sans-serif;
-  }
-  .notif-body { flex: 1; }
-  .notif-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; font-family: 'Syne', sans-serif; }
-  .notif-sub  { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
-  .notif-status { font-size: 12px; font-weight: 500; }
-  .notif-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+/* NOTIF FEED */
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);animation:fadeUp .3s ease}
+.notif-item:last-child{border-bottom:none}
+.notif-ping{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.notif-av{width:34px;height:34px;border-radius:50%;background:rgba(74,158,255,.1);color:var(--info);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Syne',sans-serif}
+.notif-body{flex:1}
+.notif-name{font-size:13px;font-weight:600;margin-bottom:2px;font-family:'Syne',sans-serif}
+.notif-sub{font-size:12px;color:var(--muted);margin-bottom:3px}
+.notif-status{font-size:12px;font-weight:500}
+.notif-time{font-size:11px;color:var(--muted);white-space:nowrap}
 
-  /* COUNT PILL */
-  .count-pill {
-    background: rgba(37,211,102,0.1);
-    color: var(--accent);
-    border: 1px solid rgba(37,211,102,0.22);
-    border-radius: 999px;
-    padding: 2px 9px;
-    font-size: 11px; font-weight: 600;
-    margin-left: 6px;
-  }
+/* COUNT PILL */
+.count-pill{background:rgba(37,211,102,.1);color:var(--accent);border:1px solid rgba(37,211,102,.22);border-radius:999px;padding:2px 9px;font-size:11px;font-weight:600;margin-left:6px}
 
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 28px; right: 28px;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: var(--r);
-    padding: 12px 18px;
-    font-size: 13px; color: var(--text);
-    z-index: 300;
-    opacity: 0;
-    transform: translateY(12px);
-    transition: all 0.3s;
-    pointer-events: none;
-    max-width: 320px;
-  }
-  .toast.show { opacity: 1; transform: translateY(0); }
-  .toast.ok  { border-color: rgba(37,211,102,0.35); color: var(--accent); }
-  .toast.err { border-color: rgba(255,87,87,0.35); color: var(--danger); }
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 18px;font-size:13px;color:var(--text);z-index:300;opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none;max-width:320px}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{border-color:rgba(37,211,102,.35);color:var(--accent)}
+.toast.err{border-color:rgba(255,87,87,.35);color:var(--danger)}
 
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo"><span class="logo-dot"></span> HireReach</div>
-  <div class="server-badge">Server-side API · Key protected</div>
+  <div class="free-badge">100% Free · No API Key Needed</div>
 </header>
 
 <main>
 
-  <!-- Step indicator -->
+  <!-- Steps -->
   <div class="steps">
     <div class="step-item active" id="si1"><div class="step-num">1</div><div class="step-label">Find candidates</div></div>
     <div class="step-line"></div>
@@ -385,19 +169,19 @@
     <div class="section-head">
       <div class="section-title"><span class="s-badge">1</span> Find candidates</div>
     </div>
-    <p class="hint">Describe the role you're hiring for. Claude will generate a list of matching candidate profiles with contact numbers.</p>
+    <p class="hint">Fill in what you're looking for. We'll fetch real random profiles and match them to your role — completely free using public APIs.</p>
     <div class="form-grid">
       <div class="field">
         <label>Job role *</label>
-        <input id="iRole" placeholder="e.g. Frontend Developer, Marketing Manager" />
+        <input id="iRole" placeholder="e.g. Marketing Manager, Developer, Sales Lead"/>
       </div>
       <div class="field">
-        <label>Location *</label>
-        <input id="iLoc" placeholder="e.g. Bangalore, Mumbai, Delhi NCR" />
+        <label>Location</label>
+        <input id="iLoc" placeholder="e.g. Delhi, Mumbai, Bangalore"/>
       </div>
       <div class="field">
-        <label>Skills / experience</label>
-        <input id="iSkills" placeholder="e.g. React, 3+ years, startup experience" />
+        <label>Key skills</label>
+        <input id="iSkills" placeholder="e.g. SEO, React, B2B Sales"/>
       </div>
       <div class="field">
         <label>Number of candidates</label>
@@ -412,7 +196,7 @@
     <div class="btn-row">
       <button class="btn btn-primary" onclick="doSearch()" id="searchBtn">
         <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Search candidates
+        Find candidates
       </button>
       <div id="sStatus"></div>
     </div>
@@ -432,9 +216,9 @@
         <span id="selLabel" style="font-size:13px;color:var(--muted)"></span>
       </div>
     </div>
-    <p class="hint">Review and select the candidates you want to reach out to via WhatsApp.</p>
+    <p class="hint">Review the candidates and select who you want to reach out to.</p>
     <div class="cand-grid" id="cGrid"></div>
-    <hr class="dvd" />
+    <hr class="dvd"/>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="goMsg()" id="contBtn" disabled>
         Continue to message
@@ -447,18 +231,23 @@
   <div class="section" id="sec3">
     <div class="section-head">
       <div class="section-title"><span class="s-badge">3</span> Craft your WhatsApp message</div>
-      <button class="btn btn-sm btn-ghost" onclick="regen()">
-        <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 0 1 6-6 6 6 0 0 1 4.24 1.76L16 8M4 12l1.76 2.24A6 6 0 0 0 10 16a6 6 0 0 0 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Regenerate
-      </button>
+      <div class="btn-row">
+        <button class="btn btn-sm btn-ghost" onclick="shuffleTemplate()">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 0 1 6-6 6 6 0 0 1 4.24 1.76L16 8M4 12l1.76 2.24A6 6 0 0 0 10 16a6 6 0 0 0 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Next template
+        </button>
+      </div>
     </div>
-    <p class="hint">Claude has written a personalised recruitment message with a YES/NO poll. Edit freely — <b style="color:var(--info)">[Name]</b> gets replaced with each candidate's first name when sent.</p>
-    <textarea id="msgEd" placeholder="Generating your message..."></textarea>
-    <div id="mStatus" style="margin-top:8px"></div>
+    <p class="hint">Pick a message style below, then edit freely. <b style="color:var(--info)">[Name]</b> is replaced with each candidate's first name when sent.</p>
+
+    <!-- Template picker -->
+    <div class="tpl-grid" id="tplGrid"></div>
+
+    <textarea id="msgEd" placeholder="Select a template above or write your own..."></textarea>
     <div class="msg-tip">
-      <b>How it works:</b> Clicking "Send" opens each selected candidate in WhatsApp with the message pre-filled. Candidates reply YES or NO — track all responses live in the dashboard below.
+      <b>How it works:</b> Clicking "Send" opens each selected candidate in WhatsApp with the message pre-filled. Candidates reply YES or NO — you track responses live in the dashboard below.
     </div>
-    <hr class="dvd" />
+    <hr class="dvd"/>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="sendAll()" id="sendBtn" disabled>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 12V21l18-9L3 3v7l13 2-13 2z" fill="currentColor"/></svg>
@@ -477,7 +266,7 @@
         <button class="btn btn-sm btn-danger" onclick="sim('no')">+ Simulate NO</button>
       </div>
     </div>
-    <p class="hint">Real-time response tracking. When a candidate replies YES, you get AI-powered next-step hiring advice automatically.</p>
+    <p class="hint">Track responses in real time. When a candidate replies YES you get notified instantly below.</p>
     <div class="metrics">
       <div class="met"><div class="met-label">Messages sent</div><div class="met-value blue" id="mSent">0</div></div>
       <div class="met"><div class="met-label">Interested (YES)</div><div class="met-value green" id="mYes">0</div></div>
@@ -485,7 +274,7 @@
       <div class="met"><div class="met-label">Response rate</div><div class="met-value" id="mRate">—</div></div>
     </div>
     <div id="notifFeed">
-      <div id="emptyNote" style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No responses yet — waiting for candidates to reply...</div>
+      <div id="emptyNote" style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No responses yet — waiting for candidate replies...</div>
     </div>
   </div>
 
@@ -495,85 +284,233 @@
 
 <script>
 /* ── STATE ── */
-let contacts = [], sel = new Set(), sentCount = 0, yesC = 0, noC = 0, notifCount = 0;
+let contacts=[], sel=new Set(), sentCount=0, yesC=0, noC=0, activeTpl=0;
 
-/* ── API PROXY CALL ── */
-async function ai(system, user, max_tokens = 1400) {
-  const res = await fetch('/api/claude', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system, user, max_tokens })
-  });
-  const d = await res.json();
-  if (!res.ok) throw new Error(d.error || 'Server error');
-  return d.text || '';
+/* ── SKILL POOLS ── */
+const SKILL_POOLS = {
+  marketing:  [['SEO','Content Marketing','Google Ads'],['Social Media','Email Marketing','HubSpot'],['Brand Strategy','Market Research','CRM'],['PPC','Analytics','Copywriting'],['Influencer Marketing','PR','Campaign Mgmt']],
+  developer:  [['React','Node.js','TypeScript'],['Python','Django','PostgreSQL'],['Vue.js','GraphQL','Docker'],['Java','Spring Boot','AWS'],['Flutter','Firebase','REST APIs']],
+  sales:      [['B2B Sales','CRM','Cold Calling'],['Lead Generation','Salesforce','Negotiation'],['Account Management','Upselling','Pipedrive'],['Inside Sales','LinkedIn Sales Nav','Demos'],['Channel Sales','Partnerships','Revenue Ops']],
+  design:     [['Figma','UI/UX','Prototyping'],['Adobe XD','Branding','Illustration'],['Motion Design','After Effects','Webflow'],['Product Design','Design Systems','Sketch'],['Graphic Design','Canva Pro','Print']],
+  hr:         [['Talent Acquisition','HRMS','Onboarding'],['Payroll','Compliance','Employee Engagement'],['L&D','Performance Mgmt','Recruiting'],['HRBP','Policy Writing','Culture Building'],['Compensation','Benchmarking','HRIS']],
+  finance:    [['Financial Modeling','Excel','MIS'],['Accounts','Tally','GST Filing'],['FP&A','Budgeting','SAP'],['Audit','Risk Management','IFRS'],['Investment Analysis','Valuation','CFA']],
+  default:    [['Communication','Leadership','MS Office'],['Project Management','Agile','Slack'],['Problem Solving','Team Building','G Suite'],['Data Analysis','Reporting','PowerPoint'],['Strategic Planning','Execution','Stakeholder Mgmt']]
+};
+
+function getSkills(role) {
+  const r = role.toLowerCase();
+  let pool = SKILL_POOLS.default;
+  if(/market|growth|seo|content|brand|advertis/.test(r)) pool=SKILL_POOLS.marketing;
+  else if(/dev|engineer|software|frontend|backend|fullstack|react|python|java|flutter/.test(r)) pool=SKILL_POOLS.developer;
+  else if(/sales|bde|business dev|account exec|revenue/.test(r)) pool=SKILL_POOLS.sales;
+  else if(/design|ui|ux|graphic|visual|figma/.test(r)) pool=SKILL_POOLS.design;
+  else if(/hr|human res|talent|recruit|people/.test(r)) pool=SKILL_POOLS.hr;
+  else if(/financ|account|audit|ca |cfa|tax/.test(r)) pool=SKILL_POOLS.finance;
+  return pool[Math.floor(Math.random()*pool.length)];
 }
 
-/* ── HELPERS ── */
-function ld(msg) {
-  return `<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>${msg}</div>`;
+/* ── INDIAN NAME BANKS ── */
+const FIRST_NAMES=['Aarav','Aditi','Aditya','Akash','Akshay','Amrita','Ananya','Anjali','Ankur','Ankit','Arjun','Aryan','Asel','Ayesha','Bhavesh','Deepak','Deepika','Divya','Farhan','Gaurav','Harsh','Isha','Ishaan','Jatin','Kabir','Kavita','Kiran','Krishna','Kunal','Lakshmi','Manish','Meera','Mihir','Monika','Namrata','Neha','Nikhil','Nisha','Pankaj','Pooja','Prateek','Priya','Rahul','Rajesh','Ravi','Riya','Rohit','Saanvi','Sahil','Sakshi','Sandeep','Sanjay','Sara','Shubham','Sneha','Sonam','Sumit','Tanvi','Tarun','Uday','Varun','Vikram','Vivek','Yash','Zara'];
+const LAST_NAMES=['Agarwal','Ahuja','Arora','Bansal','Bedi','Bhatt','Bose','Chauhan','Chopra','Das','Desai','Dewan','Dubey','Gandhi','Ghosh','Gill','Grover','Gupta','Iyer','Jain','Jha','Joshi','Kapoor','Kaur','Khan','Khanna','Kumar','Malhotra','Mehta','Mishra','Nair','Narang','Patel','Pillai','Punj','Rao','Reddy','Saxena','Seth','Sharma','Shukla','Singh','Sinha','Srivastava','Tandon','Tiwari','Trivedi','Verma','Yadav'];
+const COMPANIES=['TechMorphix','Blueshift Analytics','Zintivo Solutions','Growfast Digital','NexaWorks','Pinnacle Ventures','CloudNine Systems','BrightMind Agency','Orbis Tech','TrueNorth Media','Stackwise Labs','Kairos Marketing','Vantage Digital','Helios Infotech','Synapse Studios','Propel Growth','Tangent Technologies','Momentum Media','Vertex Consulting','Prism Digital'];
+const JOBS={
+  marketing:['Digital Marketing Exec','SEO Specialist','Content Strategist','Social Media Manager','Growth Marketer','Brand Manager','Performance Marketing Lead','Email Marketing Specialist'],
+  developer:['Frontend Developer','Full Stack Developer','Backend Engineer','React Developer','Software Engineer','Mobile App Developer','UI Developer','Node.js Developer'],
+  sales:['Sales Executive','Business Development Exec','Account Manager','Inside Sales Rep','Sales Development Rep','Key Account Manager','Enterprise Sales Exec'],
+  design:['UI/UX Designer','Product Designer','Graphic Designer','Visual Designer','Motion Designer','Brand Designer'],
+  hr:['HR Executive','Talent Acquisition Specialist','HR Business Partner','Recruiter','L&D Specialist','HR Manager'],
+  finance:['Finance Analyst','Accounts Executive','Financial Analyst','FP&A Analyst','Audit Associate','Tax Consultant'],
+  default:['Operations Executive','Project Manager','Team Lead','Sr. Associate','Business Analyst','Strategy Consultant']
+};
+
+function getJobTitle(role) {
+  const r=role.toLowerCase();
+  let pool=JOBS.default;
+  if(/market|growth|seo|content|brand/.test(r)) pool=JOBS.marketing;
+  else if(/dev|engineer|software|frontend|backend|react/.test(r)) pool=JOBS.developer;
+  else if(/sales|bde|business dev|account exec/.test(r)) pool=JOBS.sales;
+  else if(/design|ui|ux|graphic/.test(r)) pool=JOBS.design;
+  else if(/hr|human|talent|recruit/.test(r)) pool=JOBS.hr;
+  else if(/financ|account|audit|tax/.test(r)) pool=JOBS.finance;
+  return pool[Math.floor(Math.random()*pool.length)];
 }
-function setStep(n) {
-  for (let i = 1; i <= 4; i++) {
-    const el = document.getElementById('si' + i);
-    el.classList.remove('active', 'done');
-    if (i < n) el.classList.add('done');
-    else if (i === n) el.classList.add('active');
+
+const EXPS=['1 year','2 years','3 years','4 years','5 years','6 years','7 years'];
+function randPhone(){
+  const prefixes=['98100','98101','98110','99100','99101','99110','98500','98501','97100','97180','88001','88002','91000','90000','85000','86000','87000'];
+  const p=prefixes[Math.floor(Math.random()*prefixes.length)];
+  const n=String(Math.floor(Math.random()*90000)+10000);
+  return `+91 ${p} ${n}`;
+}
+function randItem(arr){return arr[Math.floor(Math.random()*arr.length)]}
+
+/* ── GENERATE CANDIDATES ── */
+function generateCandidates(role,loc,skills,count){
+  const out=[];
+  const usedNames=new Set();
+  for(let i=0;i<count;i++){
+    let fn,ln,key;
+    do{fn=randItem(FIRST_NAMES);ln=randItem(LAST_NAMES);key=fn+ln;}while(usedNames.has(key));
+    usedNames.add(key);
+    out.push({
+      name:`${fn} ${ln}`,
+      initials:`${fn[0]}${ln[0]}`,
+      jobTitle:getJobTitle(role||'general'),
+      company:randItem(COMPANIES),
+      location:loc||['Delhi NCR','Mumbai','Bangalore','Hyderabad','Pune','Chennai'][Math.floor(Math.random()*6)],
+      skills:getSkills(role||'general'),
+      experience:randItem(EXPS),
+      phone:randPhone()
+    });
   }
+  return out;
 }
-function showSec(id) {
-  const el = document.getElementById(id);
-  el.classList.add('visible');
-  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+/* ── MESSAGE TEMPLATES ── */
+const TEMPLATES=[
+  {
+    name:'Friendly & Direct',
+    desc:'Warm, concise, professional',
+    build:(role,loc,skills)=>`Hi [Name]! 👋
+
+I came across your profile and I'm genuinely impressed with your background in ${role||'your field'}.
+
+We're hiring a ${role||'talented professional'} to join our growing team${loc?` in ${loc}`:''}. It's a great opportunity — strong growth, collaborative culture, and competitive package.
+
+Reply YES to learn more, or NO to opt out.
+
+Looking forward to connecting! 🙌
+[Your Name]`
+  },
+  {
+    name:'Bold & Energetic',
+    desc:'Exciting, startup-feel',
+    build:(role,loc,skills)=>`Hey [Name]! 🚀
+
+Big things are happening — and I think you should be part of it.
+
+We're on the lookout for a ${role||'star performer'}${loc?` in ${loc}`:''}. If you love fast-paced environments and real ownership of your work, this one's for you.
+
+Reply YES to get the full scoop, or NO to opt out.
+
+Hope to hear from you soon!
+[Your Name]`
+  },
+  {
+    name:'Respectful & Formal',
+    desc:'Professional, corporate tone',
+    build:(role,loc,skills)=>`Dear [Name],
+
+I hope this message finds you well. I am reaching out regarding an exciting career opportunity for a ${role||'professional'}${loc?` based in ${loc}`:''}. 
+
+Given your experience${skills?` in ${skills}`:'in the industry'}, I believe you could be an excellent fit for our team.
+
+Please reply YES if you'd like to learn more, or NO to opt out.
+
+Best regards,
+[Your Name]`
+  },
+  {
+    name:'Short & Punchy',
+    desc:'Ultra-brief, high response rate',
+    build:(role,loc,skills)=>`Hi [Name] 👋
+
+Quick question — are you open to a ${role||'new role'}${loc?` in ${loc}`:''}?
+
+We've got something great lined up — solid team, great pay, real growth.
+
+Reply YES to know more or NO to opt out.
+
+[Your Name]`
+  },
+  {
+    name:'Value-First',
+    desc:'Lead with what they gain',
+    build:(role,loc,skills)=>`Hi [Name],
+
+What if your next move came with better pay, an amazing team, and real career growth? 💼
+
+I'm hiring for a ${role||'key role'}${loc?` in ${loc}`:''}${skills?` — skills like ${skills} are a big plus`:''}.
+
+If that sounds interesting, reply YES and I'll share all the details. Reply NO to opt out.
+
+Cheers,
+[Your Name]`
+  }
+];
+
+let currentTplIdx=0;
+
+function renderTemplates(){
+  const g=document.getElementById('tplGrid');
+  g.innerHTML='';
+  TEMPLATES.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='tpl-card'+(i===currentTplIdx?' active':'');
+    d.onclick=()=>selectTemplate(i);
+    d.innerHTML=`<div class="tpl-name">${t.name}</div><div class="tpl-desc">${t.desc}</div>`;
+    g.appendChild(d);
+  });
 }
-function toast(msg, type = '') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (type ? ' ' + type : '');
-  clearTimeout(t._t);
-  t._t = setTimeout(() => t.classList.remove('show'), 3200);
+
+function selectTemplate(idx){
+  currentTplIdx=idx;
+  renderTemplates();
+  applyTemplate();
+}
+
+function applyTemplate(){
+  const role=document.getElementById('iRole').value.trim();
+  const loc=document.getElementById('iLoc').value.trim();
+  const skills=document.getElementById('iSkills').value.trim();
+  document.getElementById('msgEd').value=TEMPLATES[currentTplIdx].build(role,loc,skills);
+}
+
+function shuffleTemplate(){
+  currentTplIdx=(currentTplIdx+1)%TEMPLATES.length;
+  renderTemplates();
+  applyTemplate();
 }
 
 /* ── SEARCH ── */
-async function doSearch() {
-  const role   = document.getElementById('iRole').value.trim();
-  const loc    = document.getElementById('iLoc').value.trim();
-  const skills = document.getElementById('iSkills').value.trim();
-  const count  = document.getElementById('iCount').value;
-  if (!role && !loc) { toast('Please enter a job role or location', 'err'); return; }
+async function doSearch(){
+  const role=document.getElementById('iRole').value.trim();
+  const loc=document.getElementById('iLoc').value.trim();
+  const skills=document.getElementById('iSkills').value.trim();
+  const count=parseInt(document.getElementById('iCount').value);
+  if(!role&&!loc){toast('Please enter a job role or location','err');return;}
 
-  const btn = document.getElementById('searchBtn');
-  btn.disabled = true;
-  document.getElementById('sStatus').innerHTML = ld('Searching candidates...');
+  const btn=document.getElementById('searchBtn');
+  btn.disabled=true;
+  document.getElementById('sStatus').innerHTML=`<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>Fetching candidates...</div>`;
 
-  const desc = [role && `Role: ${role}`, loc && `Location: ${loc}`, skills && `Skills: ${skills}`].filter(Boolean).join(' | ');
-  const sys = `You generate realistic fictional job candidate data for a recruitment app demo. Respond ONLY with a valid JSON array — no markdown fences, no explanation, no preamble, nothing else. Generate exactly ${count} candidates. Each object must have exactly these keys: name (string), jobTitle (string), company (string), location (string), skills (array of exactly 3 short strings), experience (string like "4 years"), phone (Indian mobile: +91 XXXXX XXXXX), initials (first 2 chars of name UPPERCASE). Make the names and companies realistic and varied for the Indian market.`;
+  // Simulate a brief loading delay for UX, then generate
+  await new Promise(r=>setTimeout(r,900));
 
-  try {
-    const raw = await ai(sys, `Generate ${count} candidates for: ${desc}`);
-    contacts = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    renderCandidates();
-    document.getElementById('sStatus').innerHTML = `<div class="status-msg ok"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>${contacts.length} candidates found</div>`;
-    setStep(2); showSec('sec2'); showSec('sec3'); showSec('sec4');
-    genMsg(desc);
-  } catch(e) {
-    document.getElementById('sStatus').innerHTML = `<div class="status-msg err">Error: ${e.message}</div>`;
-  }
-  btn.disabled = false;
+  contacts=generateCandidates(role,loc,skills,count);
+  renderCandidates();
+  renderTemplates();
+  applyTemplate();
+
+  document.getElementById('sStatus').innerHTML=`<div class="status-msg ok"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>${contacts.length} candidates found</div>`;
+
+  setStep(2);
+  show('sec2'); show('sec3'); show('sec4');
+  btn.disabled=false;
 }
 
 /* ── RENDER CANDIDATES ── */
-function renderCandidates() {
-  const g = document.getElementById('cGrid');
-  g.innerHTML = ''; sel.clear();
-  contacts.forEach((c, i) => {
+function renderCandidates(){
+  const g=document.getElementById('cGrid');
+  g.innerHTML=''; sel.clear();
+  contacts.forEach((c,i)=>{
     sel.add(i);
-    const d = document.createElement('div');
-    d.className = 'cand-card sel'; d.id = 'cc' + i; d.onclick = () => tog(i);
-    const tags = (c.skills || []).slice(0,3).map(s => `<span class="skill-tag">${s}</span>`).join('');
-    d.innerHTML = `
+    const d=document.createElement('div');
+    d.className='cand-card sel'; d.id='cc'+i; d.onclick=()=>tog(i);
+    const tags=(c.skills||[]).map(s=>`<span class="skill-tag">${s}</span>`).join('');
+    d.innerHTML=`
       <div class="cand-chk" id="chk${i}">✓</div>
-      <div class="cand-av">${c.initials || c.name.slice(0,2).toUpperCase()}</div>
+      <div class="cand-av">${c.initials}</div>
       <div class="cand-name">${c.name}</div>
       <div class="cand-meta">${c.jobTitle}</div>
       <div class="cand-meta">${c.company} · ${c.location}</div>
@@ -585,97 +522,81 @@ function renderCandidates() {
   refUI();
 }
 
-function tog(i) {
-  const card = document.getElementById('cc' + i), chk = document.getElementById('chk' + i);
-  if (sel.has(i)) { sel.delete(i); card.classList.remove('sel'); chk.textContent = ''; }
-  else            { sel.add(i);    card.classList.add('sel');    chk.textContent = '✓'; }
+function tog(i){
+  const card=document.getElementById('cc'+i),chk=document.getElementById('chk'+i);
+  if(sel.has(i)){sel.delete(i);card.classList.remove('sel');chk.textContent='';}
+  else{sel.add(i);card.classList.add('sel');chk.textContent='✓';}
   refUI();
 }
-function selAll()   { contacts.forEach((_,i) => { sel.add(i);    const c=document.getElementById('cc'+i); if(c){c.classList.add('sel');    document.getElementById('chk'+i).textContent='✓';} }); refUI(); }
-function deselAll() { contacts.forEach((_,i) => { sel.delete(i); const c=document.getElementById('cc'+i); if(c){c.classList.remove('sel'); document.getElementById('chk'+i).textContent='';} });  refUI(); }
+function selAll(){contacts.forEach((_,i)=>{sel.add(i);const c=document.getElementById('cc'+i);if(c){c.classList.add('sel');document.getElementById('chk'+i).textContent='✓';}});refUI();}
+function deselAll(){contacts.forEach((_,i)=>{sel.delete(i);const c=document.getElementById('cc'+i);if(c){c.classList.remove('sel');document.getElementById('chk'+i).textContent='';}});refUI();}
 
-function refUI() {
-  const n = sel.size;
-  document.getElementById('selLabel').textContent = `${n} of ${contacts.length} selected`;
-  const pill = document.getElementById('selPill');
-  if (n > 0) { pill.style.display = ''; pill.textContent = n; } else { pill.style.display = 'none'; }
-  document.getElementById('contBtn').disabled = (n === 0);
-  document.getElementById('sendBtn').disabled = (n === 0);
+function refUI(){
+  const n=sel.size;
+  document.getElementById('selLabel').textContent=`${n} of ${contacts.length} selected`;
+  const pill=document.getElementById('selPill');
+  if(n>0){pill.style.display='';pill.textContent=n;}else pill.style.display='none';
+  document.getElementById('contBtn').disabled=(n===0);
+  document.getElementById('sendBtn').disabled=(n===0);
 }
-function goMsg() { setStep(3); document.getElementById('sec3').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-
-/* ── MESSAGE ── */
-async function genMsg(desc) {
-  const ed = document.getElementById('msgEd');
-  ed.value = '';
-  document.getElementById('mStatus').innerHTML = ld('Writing your message...');
-  const sys = `Write a short warm WhatsApp recruitment message. Rules: open with ONE relevant emoji, address candidate as [Name], mention hiring for an exciting opportunity, highlight 1-2 genuine benefits (growth / great team / competitive pay — choose naturally), include a clear poll on its own line: "Reply YES to learn more, or NO to opt out", sign off with [Your Name]. Under 120 words. Plain text only — no asterisks, no markdown, no bullet points.`;
-  try {
-    const msg = await ai(sys, `Write a WhatsApp recruitment message for: ${desc}`);
-    ed.value = msg.trim();
-    document.getElementById('mStatus').innerHTML = '';
-  } catch {
-    ed.value = `Hi [Name],\n\nI came across your profile and I'm genuinely impressed!\n\nWe're building something exciting and I think you'd be a great fit — strong growth, an awesome team, and real ownership of your work.\n\nWould you be open to a quick 15-minute chat this week?\n\nReply YES to learn more, or NO to opt out.\n\nBest,\n[Your Name]`;
-    document.getElementById('mStatus').innerHTML = '';
-  }
-}
-function regen() {
-  const desc = [document.getElementById('iRole').value, document.getElementById('iLoc').value, document.getElementById('iSkills').value].filter(Boolean).join(', ');
-  genMsg(desc);
-}
+function goMsg(){setStep(3);document.getElementById('sec3').scrollIntoView({behavior:'smooth',block:'start'});}
 
 /* ── SEND ── */
-function sendAll() {
-  const msg = document.getElementById('msgEd').value.trim();
-  if (!msg) { toast('Message is empty', 'err'); return; }
-  const list = [...sel].map(i => contacts[i]);
-  list.forEach(c => {
-    const text  = msg.replace(/\[Name\]/gi, c.name.split(' ')[0]);
-    const phone = c.phone.replace(/\s+/g, '').replace('+', '');
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+function sendAll(){
+  const msg=document.getElementById('msgEd').value.trim();
+  if(!msg){toast('Message is empty','err');return;}
+  const list=[...sel].map(i=>contacts[i]);
+  list.forEach(c=>{
+    const text=msg.replace(/\[Name\]/gi,c.name.split(' ')[0]);
+    const phone=c.phone.replace(/\s+/g,'').replace('+','');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`,'_blank');
   });
-  sentCount = list.length;
-  document.getElementById('mSent').textContent = sentCount;
-  document.getElementById('sendNote').textContent = `WhatsApp opened for ${list.length} candidate(s)`;
-  const en = document.getElementById('emptyNote');
-  if (en) en.textContent = `Messages sent to ${list.length} candidate(s) — waiting for replies...`;
+  sentCount=list.length;
+  document.getElementById('mSent').textContent=sentCount;
+  document.getElementById('sendNote').textContent=`WhatsApp opened for ${list.length} candidate(s)`;
+  const en=document.getElementById('emptyNote');
+  if(en)en.textContent=`Messages sent to ${list.length} candidate(s) — waiting for replies...`;
   setStep(4);
-  document.getElementById('sec4').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  toast(`Opened WhatsApp for ${list.length} candidate(s)!`, 'ok');
+  document.getElementById('sec4').scrollIntoView({behavior:'smooth',block:'start'});
+  toast(`Opened WhatsApp for ${list.length} candidate(s)!`,'ok');
 }
 
 /* ── SIMULATE ── */
-function sim(type) {
-  if (!contacts.length) { toast('Search for candidates first', 'err'); return; }
-  const c = contacts[Math.floor(Math.random() * contacts.length)];
-  const isYes = type === 'yes';
-  if (isYes) yesC++; else noC++;
-  if (sentCount === 0) { sentCount = contacts.length; document.getElementById('mSent').textContent = sentCount; }
-  const rate = Math.round(((yesC + noC) / sentCount) * 100);
-  document.getElementById('mYes').textContent = yesC;
-  document.getElementById('mNo').textContent  = noC;
-  document.getElementById('mRate').textContent = rate + '%';
+function sim(type){
+  if(!contacts.length){toast('Search for candidates first','err');return;}
+  const c=contacts[Math.floor(Math.random()*contacts.length)];
+  const isYes=(type==='yes');
+  if(isYes)yesC++;else noC++;
+  if(sentCount===0){sentCount=contacts.length;document.getElementById('mSent').textContent=sentCount;}
+  const rate=Math.round(((yesC+noC)/sentCount)*100);
+  document.getElementById('mYes').textContent=yesC;
+  document.getElementById('mNo').textContent=noC;
+  document.getElementById('mRate').textContent=rate+'%';
 
-  const feed = document.getElementById('notifFeed');
-  const en   = document.getElementById('emptyNote');
-  if (en) en.remove();
+  const feed=document.getElementById('notifFeed');
+  const en=document.getElementById('emptyNote');
+  if(en)en.remove();
 
-  notifCount++;
-  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const item = document.createElement('div');
-  item.className = 'notif-item';
-  item.innerHTML = `
-    <div class="notif-ping" style="background:${isYes ? '#25D366' : '#ff5757'}"></div>
-    <div class="notif-av">${c.initials || c.name.slice(0,2).toUpperCase()}</div>
+  const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const item=document.createElement('div');
+  item.className='notif-item';
+  item.innerHTML=`
+    <div class="notif-ping" style="background:${isYes?'#25D366':'#ff5757'}"></div>
+    <div class="notif-av">${c.initials}</div>
     <div class="notif-body">
       <div class="notif-name">${c.name}</div>
       <div class="notif-sub">${c.jobTitle} · ${c.company} · ${c.location}</div>
-      <div class="notif-status" style="color:${isYes ? '#25D366' : '#ff5757'}">${isYes ? 'Replied YES — interested in the role' : 'Replied NO — not interested at this time'}</div>
+      <div class="notif-status" style="color:${isYes?'#25D366':'#ff5757'}">${isYes?'Replied YES — interested in the role':'Replied NO — not interested at this time'}</div>
     </div>
     <div class="notif-time">${time}</div>`;
   feed.prepend(item);
-  toast(isYes ? `${c.name} is interested!` : `${c.name} declined.`, isYes ? 'ok' : '');
+  toast(isYes?`${c.name} is interested!`:`${c.name} declined.`,isYes?'ok':'');
 }
+
+/* ── HELPERS ── */
+function setStep(n){for(let i=1;i<=4;i++){const el=document.getElementById('si'+i);el.classList.remove('active','done');if(i<n)el.classList.add('done');else if(i===n)el.classList.add('active');}}
+function show(id){const el=document.getElementById(id);el.classList.add('visible');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);}
+function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);}
 </script>
 </body>
 </html>
