@@ -426,10 +426,11 @@ function gotoPage(p){
    TRACKING LINK LOGIC
    Uses URL hash so it works on any host (no server needed)
 ════════════════════════════════ */
-function makeTrackLink(campaignId,contactId){
-  // Points to /respond page — shows YES/NO buttons to the candidate
+function makeTrackLink(campaignId,contactId,contactName){
+  // Encode name in URL so respond page works on any device (no localStorage needed)
   const base=window.location.href.split('#')[0].split('?')[0].replace(/\/[^/]*$/, '');
-  return `${base}/respond/?c=${campaignId}&ct=${contactId}`;
+  const n=encodeURIComponent(contactName||'');
+  return `${base}/respond/?c=${campaignId}&ct=${contactId}&n=${n}`;
 }
 
 // Response handling is in /respond page
@@ -647,7 +648,7 @@ function sendAll(){
   document.getElementById('notifFeed').innerHTML='<div id="emptyNote" style="font-size:13px;color:var(--muted);padding:10px 0;text-align:center">Sent to '+list.length+' contacts — waiting for replies...</div>';
   list.forEach(c=>{
     // Build personalised message with tracking links
-    const trackLink=makeTrackLink(activeCampaignId,c.id);
+    const trackLink=makeTrackLink(activeCampaignId,c.id,c.name.split(' ')[0]);
     let text=msgTemplate
       .replace(/\[Name\]/gi,c.name.split(' ')[0])
       .replace(/\[TRACK_LINK_YES\]/g,trackLink)
