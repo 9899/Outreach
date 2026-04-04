@@ -186,10 +186,10 @@ textarea{resize:vertical;line-height:1.7}
       <div class="field">
         <label>Number of candidates</label>
         <div style="display:flex;gap:8px;align-items:stretch">
-          <input id="iCount" type="number" min="1" placeholder="e.g. 10" value="10" style="flex:1"/>
+          <input id="iCount" type="number" min="1" placeholder="e.g. 10" value="10" style="flex:1" oninput="this.dataset.all=''"/>
           <button class="btn btn-sm" onclick="setAllCandidates()" style="white-space:nowrap;border-color:rgba(37,211,102,.3);color:var(--accent);background:rgba(37,211,102,.07)">Get all</button>
         </div>
-        <span style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Enter any number, or click "Get all" for 50+ candidates</span>
+        <span style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Type any number you want, or click "Get all" for no limit</span>
       </div>
     </div>
     <div class="btn-row">
@@ -347,19 +347,34 @@ function randItem(arr){return arr[Math.floor(Math.random()*arr.length)]}
 function generateCandidates(role,loc,skills,count){
   const out=[];
   const usedNames=new Set();
-  for(let i=0;i<count;i++){
+  const usedPhones=new Set();
+  // For unlimited mode, generate as many unique combos as possible
+  const maxPossible = FIRST_NAMES.length * LAST_NAMES.length; // 65 * 49 = 3185 unique names
+  const actualCount = Math.min(count, maxPossible);
+  const defaultLocs=['Delhi NCR','Mumbai','Bangalore','Hyderabad','Pune','Chennai','Kolkata','Ahmedabad','Jaipur','Noida','Gurgaon','Chandigarh'];
+  for(let i=0;i<actualCount;i++){
     let fn,ln,key;
-    do{fn=randItem(FIRST_NAMES);ln=randItem(LAST_NAMES);key=fn+ln;}while(usedNames.has(key));
+    let tries=0;
+    do{
+      fn=randItem(FIRST_NAMES);
+      ln=randItem(LAST_NAMES);
+      key=fn+ln;
+      tries++;
+    }while(usedNames.has(key) && tries<500);
+    if(tries>=500) break; // exhausted unique combos
     usedNames.add(key);
+    let phone;
+    do { phone=randPhone(); } while(usedPhones.has(phone));
+    usedPhones.add(phone);
     out.push({
       name:`${fn} ${ln}`,
       initials:`${fn[0]}${ln[0]}`,
       jobTitle:getJobTitle(role||'general'),
       company:randItem(COMPANIES),
-      location:loc||['Delhi NCR','Mumbai','Bangalore','Hyderabad','Pune','Chennai'][Math.floor(Math.random()*6)],
+      location:loc||randItem(defaultLocs),
       skills:getSkills(role||'general'),
       experience:randItem(EXPS),
-      phone:randPhone()
+      phone:phone
     });
   }
   return out;
@@ -476,13 +491,15 @@ async function doSearch(){
   const role=document.getElementById('iRole').value.trim();
   const loc=document.getElementById('iLoc').value.trim();
   const skills=document.getElementById('iSkills').value.trim();
-  const rawCount = document.getElementById('iCount').value.trim();
-  const count = rawCount === '' || rawCount === '0' ? 50 : Math.min(parseInt(rawCount) || 10, 200);
+  const iCountEl = document.getElementById('iCount');
+  const rawCount = iCountEl.value.trim();
+  const isAll = iCountEl.dataset.all === '1' || rawCount === '' || rawCount.toLowerCase() === 'all';
+  const count = isAll ? 9999 : (parseInt(rawCount) || 10);
   if(!role&&!loc){toast('Please enter a job role or location','err');return;}
 
   const btn=document.getElementById('searchBtn');
   btn.disabled=true;
-  document.getElementById('sStatus').innerHTML=`<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>Fetching candidates...</div>`;
+  document.getElementById('sStatus').innerHTML=`<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>${isAll?'Fetching all candidates...':'Fetching '+count+' candidates...'}</div>`;
 
   // Simulate a brief loading delay for UX, then generate
   await new Promise(r=>setTimeout(r,900));
@@ -596,8 +613,9 @@ function sim(type){
 /* ── HELPERS ── */
 function setAllCandidates(){
   document.getElementById('iCount').value='';
-  document.getElementById('iCount').placeholder='All (50+)';
-  toast('Will generate maximum candidates for your search','ok');
+  document.getElementById('iCount').placeholder='All';
+  document.getElementById('iCount').dataset.all='1';
+  toast('Will generate all available candidates','ok');
 }
 function setStep(n){for(let i=1;i<=4;i++){const el=document.getElementById('si'+i);el.classList.remove('active','done');if(i<n)el.classList.add('done');else if(i===n)el.classList.add('active');}}
 function show(id){const el=document.getElementById(id);el.classList.add('visible');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);}
