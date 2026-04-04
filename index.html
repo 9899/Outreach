@@ -17,20 +17,14 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
-
-/* HEADER */
 header{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100}
-.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-0.5px;display:flex;align-items:center;gap:8px}
+.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
 .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);display:inline-block}
-.free-badge{font-size:11px;background:rgba(37,211,102,0.1);color:var(--accent);border:1px solid rgba(37,211,102,0.25);border-radius:6px;padding:4px 12px;display:flex;align-items:center;gap:6px;font-weight:500}
+.free-badge{font-size:11px;background:rgba(37,211,102,.1);color:var(--accent);border:1px solid rgba(37,211,102,.25);border-radius:6px;padding:4px 12px;display:flex;align-items:center;gap:6px;font-weight:500}
 .free-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;animation:blink 2s ease-in-out infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* MAIN */
 main{max-width:1100px;margin:0 auto;padding:36px 24px 80px}
-
-/* STEPS */
-.steps{display:flex;align-items:center;margin-bottom:36px;overflow-x:auto;padding-bottom:4px;gap:0}
+.steps{display:flex;align-items:center;margin-bottom:36px;overflow-x:auto;padding-bottom:4px}
 .step-item{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .step-num{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);color:var(--muted);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .3s;font-family:'Syne',sans-serif}
 .step-item.active .step-num{border-color:var(--accent);color:var(--accent);background:rgba(37,211,102,.08)}
@@ -38,8 +32,6 @@ main{max-width:1100px;margin:0 auto;padding:36px 24px 80px}
 .step-label{font-size:13px;color:var(--muted);transition:color .3s;white-space:nowrap}
 .step-item.active .step-label,.step-item.done .step-label{color:var(--text)}
 .step-line{width:36px;height:1px;background:var(--border2);margin:0 4px;flex-shrink:0}
-
-/* SECTIONS */
 .section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:28px;margin-bottom:20px;display:none;animation:fadeUp .35s ease}
 .section.visible{display:block}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -47,8 +39,6 @@ main{max-width:1100px;margin:0 auto;padding:36px 24px 80px}
 .section-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;display:flex;align-items:center;gap:10px}
 .s-badge{width:24px;height:24px;border-radius:50%;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.3);color:var(--accent);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif}
 .hint{font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.55}
-
-/* FORMS */
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
 .field{display:flex;flex-direction:column;gap:6px}
@@ -58,8 +48,8 @@ input:focus,select:focus,textarea:focus{border-color:rgba(37,211,102,.5);box-sha
 input::placeholder,textarea::placeholder{color:var(--muted)}
 select option{background:var(--bg3)}
 textarea{resize:vertical;line-height:1.7}
-
-/* BUTTONS */
+input[type=file]{padding:8px 14px;cursor:pointer}
+input[type=file]::file-selector-button{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 12px;font-size:12px;cursor:pointer;margin-right:10px;font-family:'DM Sans',sans-serif}
 .btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--text);transition:all .2s;white-space:nowrap;user-select:none}
 .btn:hover{background:var(--bg4)}
 .btn:active{transform:scale(.97)}
@@ -72,7 +62,31 @@ textarea{resize:vertical;line-height:1.7}
 .btn-danger{background:rgba(255,87,87,.1);border-color:rgba(255,87,87,.25);color:var(--danger)}
 .btn-danger:hover{background:rgba(255,87,87,.18)}
 .btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
+/* SOURCE TOGGLE */
+.src-toggle{display:flex;gap:0;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:3px;margin-bottom:20px;width:fit-content}
+.src-btn{padding:8px 20px;border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:7px}
+.src-btn.active{background:var(--accent);color:#000;font-weight:600}
+.src-panel{display:none}
+.src-panel.active{display:block}
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.03)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{width:40px;height:40px;margin:0 auto 12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.upload-title{font-size:15px;font-weight:500;margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--muted)}
+.upload-sub b{color:var(--accent)}
+.col-map{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-top:14px;display:none}
+.col-map.visible{display:block}
+.col-map-title{font-size:13px;font-weight:500;margin-bottom:12px;color:var(--text)}
+.col-map-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.col-map-grid{grid-template-columns:1fr}}
+.col-map-row{display:flex;flex-direction:column;gap:5px}
+.col-map-row label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.col-map-row select{padding:8px 10px;font-size:13px}
+.file-info{display:flex;align-items:center;gap:10px;background:rgba(37,211,102,.05);border:1px solid rgba(37,211,102,.15);border-radius:var(--r);padding:10px 14px;margin-top:12px}
+.file-info-name{font-size:13px;font-weight:500;flex:1}
+.file-info-count{font-size:12px;color:var(--accent)}
 /* LOADER */
 .loader{display:flex;gap:5px;align-items:center}
 .ldot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pu 1.2s ease-in-out infinite}
@@ -80,7 +94,6 @@ textarea{resize:vertical;line-height:1.7}
 @keyframes pu{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
 .status-msg{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}
 .status-msg.ok{color:var(--accent)}.status-msg.err{color:var(--danger)}
-
 /* CANDIDATE GRID */
 .cand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:16px}
 .cand-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px;cursor:pointer;position:relative;transition:border-color .18s,background .18s;user-select:none}
@@ -94,32 +107,22 @@ textarea{resize:vertical;line-height:1.7}
 .skill-tag{font-size:11px;padding:2px 7px;background:var(--bg4);border:1px solid var(--border2);border-radius:4px;color:var(--muted)}
 .cand-chk{position:absolute;top:12px;right:12px;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border2);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;transition:all .15s}
 .cand-card.sel .cand-chk{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700}
-
-/* TEMPLATE PICKER */
-.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-bottom:16px}
 .tpl-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;cursor:pointer;transition:border-color .15s}
 .tpl-card:hover{border-color:var(--border2)}
 .tpl-card.active{border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.04)}
 .tpl-name{font-size:13px;font-weight:500;margin-bottom:3px}
 .tpl-desc{font-size:11px;color:var(--muted)}
-
-/* DIVIDER */
 .dvd{border:none;border-top:1px solid var(--border);margin:22px 0}
-
-/* MESSAGE */
 #msgEd{min-height:185px;font-size:14px;line-height:1.75}
 .msg-tip{font-size:12px;color:var(--muted);background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.12);border-radius:8px;padding:11px 15px;margin-top:14px;line-height:1.55}
 .msg-tip b{color:var(--info);font-weight:500}
-
-/* METRICS */
 .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 @media(max-width:640px){.metrics{grid-template-columns:repeat(2,1fr)}}
 .met{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;text-align:center}
 .met-label{font-size:12px;color:var(--muted);margin-bottom:6px}
 .met-value{font-size:26px;font-weight:700;font-family:'Syne',sans-serif}
 .green{color:var(--accent)}.red{color:var(--danger)}.blue{color:var(--info)}
-
-/* NOTIF FEED */
 .notif-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);animation:fadeUp .3s ease}
 .notif-item:last-child{border-bottom:none}
 .notif-ping{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0}
@@ -129,31 +132,26 @@ textarea{resize:vertical;line-height:1.7}
 .notif-sub{font-size:12px;color:var(--muted);margin-bottom:3px}
 .notif-status{font-size:12px;font-weight:500}
 .notif-time{font-size:11px;color:var(--muted);white-space:nowrap}
-
-/* COUNT PILL */
 .count-pill{background:rgba(37,211,102,.1);color:var(--accent);border:1px solid rgba(37,211,102,.22);border-radius:999px;padding:2px 9px;font-size:11px;font-weight:600;margin-left:6px}
-
-/* TOAST */
-.toast{position:fixed;bottom:28px;right:28px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 18px;font-size:13px;color:var(--text);z-index:300;opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none;max-width:320px}
+.toast{position:fixed;bottom:28px;right:28px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px 18px;font-size:13px;color:var(--text);z-index:300;opacity:0;transform:translateY(12px);transition:all .3s;pointer-events:none;max-width:340px}
 .toast.show{opacity:1;transform:translateY(0)}
 .toast.ok{border-color:rgba(37,211,102,.35);color:var(--accent)}
 .toast.err{border-color:rgba(255,87,87,.35);color:var(--danger)}
-
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+.sample-link{font-size:12px;color:var(--info);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.sample-link:hover{color:#7bbfff}
 </style>
 </head>
 <body>
 
 <header>
   <div class="logo"><span class="logo-dot"></span> HireReach</div>
-  <div class="free-badge">100% Free · No API Key Needed</div>
+  <div class="free-badge">100% Free · No API Key</div>
 </header>
 
 <main>
-
-  <!-- Steps -->
   <div class="steps">
     <div class="step-item active" id="si1"><div class="step-num">1</div><div class="step-label">Find candidates</div></div>
     <div class="step-line"></div>
@@ -164,44 +162,113 @@ textarea{resize:vertical;line-height:1.7}
     <div class="step-item" id="si4"><div class="step-num">4</div><div class="step-label">Send & track</div></div>
   </div>
 
-  <!-- Step 1: Search -->
+  <!-- STEP 1 -->
   <div class="section visible" id="sec1">
     <div class="section-head">
       <div class="section-title"><span class="s-badge">1</span> Find candidates</div>
     </div>
-    <p class="hint">Fill in what you're looking for. We'll fetch real random profiles and match them to your role — completely free using public APIs.</p>
-    <div class="form-grid">
-      <div class="field">
-        <label>Job role *</label>
-        <input id="iRole" placeholder="e.g. Marketing Manager, Developer, Sales Lead"/>
-      </div>
-      <div class="field">
-        <label>Location</label>
-        <input id="iLoc" placeholder="e.g. Delhi, Mumbai, Bangalore"/>
-      </div>
-      <div class="field">
-        <label>Key skills</label>
-        <input id="iSkills" placeholder="e.g. SEO, React, B2B Sales"/>
-      </div>
-      <div class="field">
-        <label>Number of candidates</label>
-        <div style="display:flex;gap:8px;align-items:stretch">
-          <input id="iCount" type="number" min="1" placeholder="e.g. 10" value="10" style="flex:1" oninput="this.dataset.all=''"/>
-          <button class="btn btn-sm" onclick="setAllCandidates()" style="white-space:nowrap;border-color:rgba(37,211,102,.3);color:var(--accent);background:rgba(37,211,102,.07)">Get all</button>
+
+    <!-- Source toggle -->
+    <div class="src-toggle">
+      <button class="src-btn active" id="btnSearch" onclick="switchSource('search')">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Search
+      </button>
+      <button class="src-btn" id="btnUpload" onclick="switchSource('upload')">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 13V4M6 7l4-4 4 4M4 16h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Upload Excel / CSV
+      </button>
+    </div>
+
+    <!-- SEARCH PANEL -->
+    <div class="src-panel active" id="panelSearch">
+      <p class="hint">Describe the role you are hiring for — we will generate matching candidate profiles instantly, no API needed.</p>
+      <div class="form-grid">
+        <div class="field">
+          <label>Job role *</label>
+          <input id="iRole" placeholder="e.g. Marketing Manager, React Developer"/>
         </div>
-        <span style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Type any number you want, or click "Get all" for no limit</span>
+        <div class="field">
+          <label>Location</label>
+          <input id="iLoc" placeholder="e.g. Delhi, Mumbai, Bangalore"/>
+        </div>
+        <div class="field">
+          <label>Key skills</label>
+          <input id="iSkills" placeholder="e.g. SEO, React, B2B Sales"/>
+        </div>
+        <div class="field">
+          <label>Number of candidates</label>
+          <div style="display:flex;gap:8px;align-items:stretch">
+            <input id="iCount" type="number" min="1" placeholder="e.g. 10" value="10" style="flex:1" oninput="this.dataset.all=''"/>
+            <button class="btn btn-sm" onclick="setAllCandidates()" style="white-space:nowrap;border-color:rgba(37,211,102,.3);color:var(--accent);background:rgba(37,211,102,.07)">Get all</button>
+          </div>
+          <span style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Type any number, or "Get all" for no limit</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="doSearch()" id="searchBtn">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Find candidates
+        </button>
+        <div id="sStatus"></div>
       </div>
     </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="doSearch()" id="searchBtn">
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="2"/><path d="M14 14l4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        Find candidates
-      </button>
-      <div id="sStatus"></div>
+
+    <!-- UPLOAD PANEL -->
+    <div class="src-panel" id="panelUpload">
+      <p class="hint">Upload an Excel (.xlsx) or CSV file containing your contacts. Map the columns for name and phone number — that is all you need.</p>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])"/>
+        <div class="upload-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M8 8l4-4 4 4" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="#25D366" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="upload-title">Drop your file here or click to browse</div>
+        <div class="upload-sub">Supports <b>.xlsx</b>, <b>.xls</b> and <b>.csv</b> — any number of rows</div>
+      </div>
+
+      <div id="fileInfo" style="display:none" class="file-info">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="2" stroke="#25D366" stroke-width="1.5"/><path d="M7 7h6M7 10h6M7 13h4" stroke="#25D366" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="file-info-name" id="fileName"></div>
+        <div class="file-info-count" id="fileRowCount"></div>
+        <button class="btn btn-sm btn-ghost" onclick="clearFile()" style="padding:4px 10px;font-size:11px">✕ Clear</button>
+      </div>
+
+      <div class="col-map" id="colMap">
+        <div class="col-map-title">Map your columns</div>
+        <div class="col-map-grid">
+          <div class="col-map-row">
+            <label>Name column *</label>
+            <select id="colName"><option value="">— select —</option></select>
+          </div>
+          <div class="col-map-row">
+            <label>Phone number column *</label>
+            <select id="colPhone"><option value="">— select —</option></select>
+          </div>
+          <div class="col-map-row">
+            <label>Job title column (optional)</label>
+            <select id="colTitle"><option value="">— none —</option></select>
+          </div>
+          <div class="col-map-row">
+            <label>Company column (optional)</label>
+            <select id="colCompany"><option value="">— none —</option></select>
+          </div>
+        </div>
+        <div style="margin-top:14px" class="btn-row">
+          <button class="btn btn-primary" onclick="importContacts()">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M6 9l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Import contacts
+          </button>
+          <div id="importStatus"></div>
+        </div>
+        <div style="margin-top:10px">
+          <span class="sample-link" onclick="downloadSample()">Download sample Excel template</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Step 2: Select -->
+  <!-- STEP 2 -->
   <div class="section" id="sec2">
     <div class="section-head">
       <div class="section-title">
@@ -215,7 +282,7 @@ textarea{resize:vertical;line-height:1.7}
         <span id="selLabel" style="font-size:13px;color:var(--muted)"></span>
       </div>
     </div>
-    <p class="hint">Review the candidates and select who you want to reach out to.</p>
+    <p class="hint">Review and select the contacts you want to send a WhatsApp message to.</p>
     <div class="cand-grid" id="cGrid"></div>
     <hr class="dvd"/>
     <div class="btn-row">
@@ -226,25 +293,20 @@ textarea{resize:vertical;line-height:1.7}
     </div>
   </div>
 
-  <!-- Step 3: Message -->
+  <!-- STEP 3 -->
   <div class="section" id="sec3">
     <div class="section-head">
       <div class="section-title"><span class="s-badge">3</span> Craft your WhatsApp message</div>
-      <div class="btn-row">
-        <button class="btn btn-sm btn-ghost" onclick="shuffleTemplate()">
-          <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 0 1 6-6 6 6 0 0 1 4.24 1.76L16 8M4 12l1.76 2.24A6 6 0 0 0 10 16a6 6 0 0 0 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          Next template
-        </button>
-      </div>
+      <button class="btn btn-sm btn-ghost" onclick="shuffleTemplate()">
+        <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 10a6 6 0 0 1 6-6 6 6 0 0 1 4.24 1.76L16 8M4 12l1.76 2.24A6 6 0 0 0 10 16a6 6 0 0 0 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        Next template
+      </button>
     </div>
-    <p class="hint">Pick a message style below, then edit freely. <b style="color:var(--info)">[Name]</b> is replaced with each candidate's first name when sent.</p>
-
-    <!-- Template picker -->
+    <p class="hint">Choose a tone below. <b style="color:var(--info)">[Name]</b> will be replaced with each contact's first name when sent.</p>
     <div class="tpl-grid" id="tplGrid"></div>
-
     <textarea id="msgEd" placeholder="Select a template above or write your own..."></textarea>
     <div class="msg-tip">
-      <b>How it works:</b> Clicking "Send" opens each selected candidate in WhatsApp with the message pre-filled. Candidates reply YES or NO — you track responses live in the dashboard below.
+      <b>How it works:</b> Clicking "Send" opens each selected contact in WhatsApp with the message pre-filled. Contacts reply YES or NO — track all responses live in the dashboard.
     </div>
     <hr class="dvd"/>
     <div class="btn-row">
@@ -256,7 +318,7 @@ textarea{resize:vertical;line-height:1.7}
     </div>
   </div>
 
-  <!-- Step 4: Dashboard -->
+  <!-- STEP 4 -->
   <div class="section" id="sec4">
     <div class="section-head">
       <div class="section-title"><span class="s-badge">4</span> Live campaign dashboard</div>
@@ -265,7 +327,7 @@ textarea{resize:vertical;line-height:1.7}
         <button class="btn btn-sm btn-danger" onclick="sim('no')">+ Simulate NO</button>
       </div>
     </div>
-    <p class="hint">Track responses in real time. When a candidate replies YES you get notified instantly below.</p>
+    <p class="hint">Real-time response tracking. Every YES reply shows up here instantly.</p>
     <div class="metrics">
       <div class="met"><div class="met-label">Messages sent</div><div class="met-value blue" id="mSent">0</div></div>
       <div class="met"><div class="met-label">Interested (YES)</div><div class="met-value green" id="mYes">0</div></div>
@@ -273,217 +335,76 @@ textarea{resize:vertical;line-height:1.7}
       <div class="met"><div class="met-label">Response rate</div><div class="met-value" id="mRate">—</div></div>
     </div>
     <div id="notifFeed">
-      <div id="emptyNote" style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No responses yet — waiting for candidate replies...</div>
+      <div id="emptyNote" style="font-size:13px;color:var(--muted);padding:14px 0;text-align:center">No responses yet — waiting for replies...</div>
     </div>
   </div>
-
 </main>
 
 <div class="toast" id="toast"></div>
 
+<!-- SheetJS for Excel parsing -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 /* ── STATE ── */
-let contacts=[], sel=new Set(), sentCount=0, yesC=0, noC=0, activeTpl=0;
+let contacts=[], sel=new Set(), sentCount=0, yesC=0, noC=0, currentTplIdx=0;
+let parsedRows=[], fileHeaders=[];
+let currentSource='search';
 
-/* ── SKILL POOLS ── */
-const SKILL_POOLS = {
-  marketing:  [['SEO','Content Marketing','Google Ads'],['Social Media','Email Marketing','HubSpot'],['Brand Strategy','Market Research','CRM'],['PPC','Analytics','Copywriting'],['Influencer Marketing','PR','Campaign Mgmt']],
-  developer:  [['React','Node.js','TypeScript'],['Python','Django','PostgreSQL'],['Vue.js','GraphQL','Docker'],['Java','Spring Boot','AWS'],['Flutter','Firebase','REST APIs']],
-  sales:      [['B2B Sales','CRM','Cold Calling'],['Lead Generation','Salesforce','Negotiation'],['Account Management','Upselling','Pipedrive'],['Inside Sales','LinkedIn Sales Nav','Demos'],['Channel Sales','Partnerships','Revenue Ops']],
-  design:     [['Figma','UI/UX','Prototyping'],['Adobe XD','Branding','Illustration'],['Motion Design','After Effects','Webflow'],['Product Design','Design Systems','Sketch'],['Graphic Design','Canva Pro','Print']],
-  hr:         [['Talent Acquisition','HRMS','Onboarding'],['Payroll','Compliance','Employee Engagement'],['L&D','Performance Mgmt','Recruiting'],['HRBP','Policy Writing','Culture Building'],['Compensation','Benchmarking','HRIS']],
-  finance:    [['Financial Modeling','Excel','MIS'],['Accounts','Tally','GST Filing'],['FP&A','Budgeting','SAP'],['Audit','Risk Management','IFRS'],['Investment Analysis','Valuation','CFA']],
-  default:    [['Communication','Leadership','MS Office'],['Project Management','Agile','Slack'],['Problem Solving','Team Building','G Suite'],['Data Analysis','Reporting','PowerPoint'],['Strategic Planning','Execution','Stakeholder Mgmt']]
-};
-
-function getSkills(role) {
-  const r = role.toLowerCase();
-  let pool = SKILL_POOLS.default;
-  if(/market|growth|seo|content|brand|advertis/.test(r)) pool=SKILL_POOLS.marketing;
-  else if(/dev|engineer|software|frontend|backend|fullstack|react|python|java|flutter/.test(r)) pool=SKILL_POOLS.developer;
-  else if(/sales|bde|business dev|account exec|revenue/.test(r)) pool=SKILL_POOLS.sales;
-  else if(/design|ui|ux|graphic|visual|figma/.test(r)) pool=SKILL_POOLS.design;
-  else if(/hr|human res|talent|recruit|people/.test(r)) pool=SKILL_POOLS.hr;
-  else if(/financ|account|audit|ca |cfa|tax/.test(r)) pool=SKILL_POOLS.finance;
-  return pool[Math.floor(Math.random()*pool.length)];
+/* ── SOURCE TOGGLE ── */
+function switchSource(src){
+  currentSource=src;
+  document.getElementById('btnSearch').classList.toggle('active',src==='search');
+  document.getElementById('btnUpload').classList.toggle('active',src==='upload');
+  document.getElementById('panelSearch').classList.toggle('active',src==='search');
+  document.getElementById('panelUpload').classList.toggle('active',src==='upload');
 }
 
-/* ── INDIAN NAME BANKS ── */
-const FIRST_NAMES=['Aarav','Aditi','Aditya','Akash','Akshay','Amrita','Ananya','Anjali','Ankur','Ankit','Arjun','Aryan','Asel','Ayesha','Bhavesh','Deepak','Deepika','Divya','Farhan','Gaurav','Harsh','Isha','Ishaan','Jatin','Kabir','Kavita','Kiran','Krishna','Kunal','Lakshmi','Manish','Meera','Mihir','Monika','Namrata','Neha','Nikhil','Nisha','Pankaj','Pooja','Prateek','Priya','Rahul','Rajesh','Ravi','Riya','Rohit','Saanvi','Sahil','Sakshi','Sandeep','Sanjay','Sara','Shubham','Sneha','Sonam','Sumit','Tanvi','Tarun','Uday','Varun','Vikram','Vivek','Yash','Zara'];
-const LAST_NAMES=['Agarwal','Ahuja','Arora','Bansal','Bedi','Bhatt','Bose','Chauhan','Chopra','Das','Desai','Dewan','Dubey','Gandhi','Ghosh','Gill','Grover','Gupta','Iyer','Jain','Jha','Joshi','Kapoor','Kaur','Khan','Khanna','Kumar','Malhotra','Mehta','Mishra','Nair','Narang','Patel','Pillai','Punj','Rao','Reddy','Saxena','Seth','Sharma','Shukla','Singh','Sinha','Srivastava','Tandon','Tiwari','Trivedi','Verma','Yadav'];
-const COMPANIES=['TechMorphix','Blueshift Analytics','Zintivo Solutions','Growfast Digital','NexaWorks','Pinnacle Ventures','CloudNine Systems','BrightMind Agency','Orbis Tech','TrueNorth Media','Stackwise Labs','Kairos Marketing','Vantage Digital','Helios Infotech','Synapse Studios','Propel Growth','Tangent Technologies','Momentum Media','Vertex Consulting','Prism Digital'];
-const JOBS={
-  marketing:['Digital Marketing Exec','SEO Specialist','Content Strategist','Social Media Manager','Growth Marketer','Brand Manager','Performance Marketing Lead','Email Marketing Specialist'],
-  developer:['Frontend Developer','Full Stack Developer','Backend Engineer','React Developer','Software Engineer','Mobile App Developer','UI Developer','Node.js Developer'],
-  sales:['Sales Executive','Business Development Exec','Account Manager','Inside Sales Rep','Sales Development Rep','Key Account Manager','Enterprise Sales Exec'],
-  design:['UI/UX Designer','Product Designer','Graphic Designer','Visual Designer','Motion Designer','Brand Designer'],
-  hr:['HR Executive','Talent Acquisition Specialist','HR Business Partner','Recruiter','L&D Specialist','HR Manager'],
-  finance:['Finance Analyst','Accounts Executive','Financial Analyst','FP&A Analyst','Audit Associate','Tax Consultant'],
-  default:['Operations Executive','Project Manager','Team Lead','Sr. Associate','Business Analyst','Strategy Consultant']
+/* ── SKILL / NAME POOLS ── */
+const SKILL_POOLS={
+  marketing:[['SEO','Content Marketing','Google Ads'],['Social Media','Email Marketing','HubSpot'],['Brand Strategy','Market Research','CRM'],['PPC','Analytics','Copywriting'],['Influencer Mktg','PR','Campaign Mgmt']],
+  developer:[['React','Node.js','TypeScript'],['Python','Django','PostgreSQL'],['Vue.js','GraphQL','Docker'],['Java','Spring Boot','AWS'],['Flutter','Firebase','REST APIs']],
+  sales:[['B2B Sales','CRM','Cold Calling'],['Lead Generation','Salesforce','Negotiation'],['Account Mgmt','Upselling','Pipedrive'],['Inside Sales','LinkedIn Sales Nav','Demos'],['Channel Sales','Partnerships','Revenue Ops']],
+  design:[['Figma','UI/UX','Prototyping'],['Adobe XD','Branding','Illustration'],['Motion Design','After Effects','Webflow'],['Product Design','Design Systems','Sketch'],['Graphic Design','Canva Pro','Print']],
+  hr:[['Talent Acquisition','HRMS','Onboarding'],['Payroll','Compliance','Employee Engagement'],['L&D','Perf Mgmt','Recruiting'],['HRBP','Policy Writing','Culture Building'],['Compensation','Benchmarking','HRIS']],
+  finance:[['Financial Modeling','Excel','MIS'],['Accounts','Tally','GST'],['FP&A','Budgeting','SAP'],['Audit','Risk Mgmt','IFRS'],['Investment Analysis','Valuation','CFA']],
+  default:[['Communication','Leadership','MS Office'],['Project Mgmt','Agile','Slack'],['Problem Solving','Team Building','G Suite'],['Data Analysis','Reporting','PowerPoint'],['Strategy','Execution','Stakeholder Mgmt']]
 };
-
-function getJobTitle(role) {
-  const r=role.toLowerCase();
-  let pool=JOBS.default;
-  if(/market|growth|seo|content|brand/.test(r)) pool=JOBS.marketing;
-  else if(/dev|engineer|software|frontend|backend|react/.test(r)) pool=JOBS.developer;
-  else if(/sales|bde|business dev|account exec/.test(r)) pool=JOBS.sales;
-  else if(/design|ui|ux|graphic/.test(r)) pool=JOBS.design;
-  else if(/hr|human|talent|recruit/.test(r)) pool=JOBS.hr;
-  else if(/financ|account|audit|tax/.test(r)) pool=JOBS.finance;
-  return pool[Math.floor(Math.random()*pool.length)];
+function getSkills(role){
+  const r=(role||'').toLowerCase();
+  if(/market|growth|seo|content|brand|advertis/.test(r))return randItem(SKILL_POOLS.marketing);
+  if(/dev|engineer|software|frontend|backend|react|python|java|flutter/.test(r))return randItem(SKILL_POOLS.developer);
+  if(/sales|bde|business dev|account exec|revenue/.test(r))return randItem(SKILL_POOLS.sales);
+  if(/design|ui|ux|graphic|visual|figma/.test(r))return randItem(SKILL_POOLS.design);
+  if(/hr|human res|talent|recruit|people/.test(r))return randItem(SKILL_POOLS.hr);
+  if(/financ|account|audit|ca |cfa|tax/.test(r))return randItem(SKILL_POOLS.finance);
+  return randItem(SKILL_POOLS.default);
 }
-
+const FN=['Aarav','Aditi','Aditya','Akash','Akshay','Amrita','Ananya','Anjali','Ankur','Ankit','Arjun','Aryan','Ayesha','Bhavesh','Deepak','Deepika','Divya','Farhan','Gaurav','Harsh','Isha','Ishaan','Jatin','Kabir','Kavita','Kiran','Krishna','Kunal','Lakshmi','Manish','Meera','Mihir','Monika','Namrata','Neha','Nikhil','Nisha','Pankaj','Pooja','Prateek','Priya','Rahul','Rajesh','Ravi','Riya','Rohit','Saanvi','Sahil','Sakshi','Sandeep','Sanjay','Sara','Shubham','Sneha','Sonam','Sumit','Tanvi','Tarun','Uday','Varun','Vikram','Vivek','Yash','Zara'];
+const LN=['Agarwal','Ahuja','Arora','Bansal','Bedi','Bhatt','Bose','Chauhan','Chopra','Das','Desai','Dewan','Dubey','Gandhi','Ghosh','Gill','Grover','Gupta','Iyer','Jain','Jha','Joshi','Kapoor','Kaur','Khan','Khanna','Kumar','Malhotra','Mehta','Mishra','Nair','Narang','Patel','Pillai','Punj','Rao','Reddy','Saxena','Seth','Sharma','Shukla','Singh','Sinha','Srivastava','Tandon','Tiwari','Trivedi','Verma','Yadav'];
+const COMPANIES=['TechMorphix','Blueshift Analytics','Zintivo Solutions','Growfast Digital','NexaWorks','Pinnacle Ventures','CloudNine Systems','BrightMind Agency','Orbis Tech','TrueNorth Media','Stackwise Labs','Kairos Marketing','Vantage Digital','Helios Infotech','Synapse Studios','Propel Growth','Tangent Tech','Momentum Media','Vertex Consulting','Prism Digital'];
+const JOBS={marketing:['Digital Marketing Exec','SEO Specialist','Content Strategist','Social Media Manager','Growth Marketer','Brand Manager'],developer:['Frontend Developer','Full Stack Developer','Backend Engineer','React Developer','Software Engineer','Mobile App Dev'],sales:['Sales Executive','BDE','Account Manager','Inside Sales Rep','SDR','Key Account Manager'],design:['UI/UX Designer','Product Designer','Graphic Designer','Visual Designer','Motion Designer'],hr:['HR Executive','Talent Acquisition Specialist','HR BP','Recruiter','L&D Specialist'],finance:['Finance Analyst','Accounts Executive','FP&A Analyst','Audit Associate','Tax Consultant'],default:['Operations Executive','Project Manager','Team Lead','Sr. Associate','Business Analyst']};
+function getJobTitle(role){const r=(role||'').toLowerCase();if(/market|growth|seo|content|brand/.test(r))return randItem(JOBS.marketing);if(/dev|engineer|software|frontend|backend|react/.test(r))return randItem(JOBS.developer);if(/sales|bde|business dev/.test(r))return randItem(JOBS.sales);if(/design|ui|ux|graphic/.test(r))return randItem(JOBS.design);if(/hr|human|talent|recruit/.test(r))return randItem(JOBS.hr);if(/financ|account|audit|tax/.test(r))return randItem(JOBS.finance);return randItem(JOBS.default);}
 const EXPS=['1 year','2 years','3 years','4 years','5 years','6 years','7 years'];
-function randPhone(){
-  const prefixes=['98100','98101','98110','99100','99101','99110','98500','98501','97100','97180','88001','88002','91000','90000','85000','86000','87000'];
-  const p=prefixes[Math.floor(Math.random()*prefixes.length)];
-  const n=String(Math.floor(Math.random()*90000)+10000);
-  return `+91 ${p} ${n}`;
-}
-function randItem(arr){return arr[Math.floor(Math.random()*arr.length)]}
+const LOCS=['Delhi NCR','Mumbai','Bangalore','Hyderabad','Pune','Chennai','Kolkata','Ahmedabad','Jaipur','Noida','Gurgaon','Chandigarh'];
+function randPhone(){const p=['98100','98101','98110','99100','99101','98500','97100','97180','88001','91000','90000','85000','87000'];return`+91 ${randItem(p)} ${String(Math.floor(Math.random()*90000)+10000)}`;}
+function randItem(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
-/* ── GENERATE CANDIDATES ── */
+/* ── GENERATE (SEARCH MODE) ── */
 function generateCandidates(role,loc,skills,count){
-  const out=[];
-  const usedNames=new Set();
-  const usedPhones=new Set();
-  // For unlimited mode, generate as many unique combos as possible
-  const maxPossible = FIRST_NAMES.length * LAST_NAMES.length; // 65 * 49 = 3185 unique names
-  const actualCount = Math.min(count, maxPossible);
-  const defaultLocs=['Delhi NCR','Mumbai','Bangalore','Hyderabad','Pune','Chennai','Kolkata','Ahmedabad','Jaipur','Noida','Gurgaon','Chandigarh'];
+  const out=[],usedNames=new Set(),usedPhones=new Set();
+  const maxPossible=FN.length*LN.length;
+  const actualCount=Math.min(count,maxPossible);
   for(let i=0;i<actualCount;i++){
-    let fn,ln,key;
-    let tries=0;
-    do{
-      fn=randItem(FIRST_NAMES);
-      ln=randItem(LAST_NAMES);
-      key=fn+ln;
-      tries++;
-    }while(usedNames.has(key) && tries<500);
-    if(tries>=500) break; // exhausted unique combos
+    let fn,ln,key,tries=0;
+    do{fn=randItem(FN);ln=randItem(LN);key=fn+ln;tries++;}while(usedNames.has(key)&&tries<500);
+    if(tries>=500)break;
     usedNames.add(key);
     let phone;
-    do { phone=randPhone(); } while(usedPhones.has(phone));
+    do{phone=randPhone();}while(usedPhones.has(phone));
     usedPhones.add(phone);
-    out.push({
-      name:`${fn} ${ln}`,
-      initials:`${fn[0]}${ln[0]}`,
-      jobTitle:getJobTitle(role||'general'),
-      company:randItem(COMPANIES),
-      location:loc||randItem(defaultLocs),
-      skills:getSkills(role||'general'),
-      experience:randItem(EXPS),
-      phone:phone
-    });
+    out.push({name:`${fn} ${ln}`,initials:`${fn[0]}${ln[0]}`,jobTitle:getJobTitle(role),company:randItem(COMPANIES),location:loc||randItem(LOCS),skills:getSkills(role),experience:randItem(EXPS),phone});
   }
   return out;
-}
-
-/* ── MESSAGE TEMPLATES ── */
-const TEMPLATES=[
-  {
-    name:'Friendly & Direct',
-    desc:'Warm, concise, professional',
-    build:(role,loc,skills)=>`Hi [Name]! 👋
-
-I came across your profile and I'm genuinely impressed with your background in ${role||'your field'}.
-
-We're hiring a ${role||'talented professional'} to join our growing team${loc?` in ${loc}`:''}. It's a great opportunity — strong growth, collaborative culture, and competitive package.
-
-Reply YES to learn more, or NO to opt out.
-
-Looking forward to connecting! 🙌
-[Your Name]`
-  },
-  {
-    name:'Bold & Energetic',
-    desc:'Exciting, startup-feel',
-    build:(role,loc,skills)=>`Hey [Name]! 🚀
-
-Big things are happening — and I think you should be part of it.
-
-We're on the lookout for a ${role||'star performer'}${loc?` in ${loc}`:''}. If you love fast-paced environments and real ownership of your work, this one's for you.
-
-Reply YES to get the full scoop, or NO to opt out.
-
-Hope to hear from you soon!
-[Your Name]`
-  },
-  {
-    name:'Respectful & Formal',
-    desc:'Professional, corporate tone',
-    build:(role,loc,skills)=>`Dear [Name],
-
-I hope this message finds you well. I am reaching out regarding an exciting career opportunity for a ${role||'professional'}${loc?` based in ${loc}`:''}. 
-
-Given your experience${skills?` in ${skills}`:'in the industry'}, I believe you could be an excellent fit for our team.
-
-Please reply YES if you'd like to learn more, or NO to opt out.
-
-Best regards,
-[Your Name]`
-  },
-  {
-    name:'Short & Punchy',
-    desc:'Ultra-brief, high response rate',
-    build:(role,loc,skills)=>`Hi [Name] 👋
-
-Quick question — are you open to a ${role||'new role'}${loc?` in ${loc}`:''}?
-
-We've got something great lined up — solid team, great pay, real growth.
-
-Reply YES to know more or NO to opt out.
-
-[Your Name]`
-  },
-  {
-    name:'Value-First',
-    desc:'Lead with what they gain',
-    build:(role,loc,skills)=>`Hi [Name],
-
-What if your next move came with better pay, an amazing team, and real career growth? 💼
-
-I'm hiring for a ${role||'key role'}${loc?` in ${loc}`:''}${skills?` — skills like ${skills} are a big plus`:''}.
-
-If that sounds interesting, reply YES and I'll share all the details. Reply NO to opt out.
-
-Cheers,
-[Your Name]`
-  }
-];
-
-let currentTplIdx=0;
-
-function renderTemplates(){
-  const g=document.getElementById('tplGrid');
-  g.innerHTML='';
-  TEMPLATES.forEach((t,i)=>{
-    const d=document.createElement('div');
-    d.className='tpl-card'+(i===currentTplIdx?' active':'');
-    d.onclick=()=>selectTemplate(i);
-    d.innerHTML=`<div class="tpl-name">${t.name}</div><div class="tpl-desc">${t.desc}</div>`;
-    g.appendChild(d);
-  });
-}
-
-function selectTemplate(idx){
-  currentTplIdx=idx;
-  renderTemplates();
-  applyTemplate();
-}
-
-function applyTemplate(){
-  const role=document.getElementById('iRole').value.trim();
-  const loc=document.getElementById('iLoc').value.trim();
-  const skills=document.getElementById('iSkills').value.trim();
-  document.getElementById('msgEd').value=TEMPLATES[currentTplIdx].build(role,loc,skills);
-}
-
-function shuffleTemplate(){
-  currentTplIdx=(currentTplIdx+1)%TEMPLATES.length;
-  renderTemplates();
-  applyTemplate();
 }
 
 /* ── SEARCH ── */
@@ -491,72 +412,194 @@ async function doSearch(){
   const role=document.getElementById('iRole').value.trim();
   const loc=document.getElementById('iLoc').value.trim();
   const skills=document.getElementById('iSkills').value.trim();
-  const iCountEl = document.getElementById('iCount');
-  const rawCount = iCountEl.value.trim();
-  const isAll = iCountEl.dataset.all === '1' || rawCount === '' || rawCount.toLowerCase() === 'all';
-  const count = isAll ? 9999 : (parseInt(rawCount) || 10);
+  const iCountEl=document.getElementById('iCount');
+  const rawCount=iCountEl.value.trim();
+  const isAll=iCountEl.dataset.all==='1'||rawCount==='';
+  const count=isAll?9999:(parseInt(rawCount)||10);
   if(!role&&!loc){toast('Please enter a job role or location','err');return;}
-
   const btn=document.getElementById('searchBtn');
   btn.disabled=true;
-  document.getElementById('sStatus').innerHTML=`<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>${isAll?'Fetching all candidates...':'Fetching '+count+' candidates...'}</div>`;
-
-  // Simulate a brief loading delay for UX, then generate
-  await new Promise(r=>setTimeout(r,900));
-
+  document.getElementById('sStatus').innerHTML=`<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>${isAll?'Generating all candidates...':'Generating '+count+' candidates...'}</div>`;
+  await new Promise(r=>setTimeout(r,700));
   contacts=generateCandidates(role,loc,skills,count);
+  finishLoad(`${contacts.length} candidates generated`);
+  btn.disabled=false;
+}
+function setAllCandidates(){
+  const el=document.getElementById('iCount');
+  el.value='';el.placeholder='All';el.dataset.all='1';
+  toast('Will generate all available candidates','ok');
+}
+
+/* ── FILE UPLOAD ── */
+function handleFile(file){
+  if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['xlsx','xls','csv'].includes(ext)){toast('Please upload an Excel (.xlsx/.xls) or CSV file','err');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      if(data.length<2){toast('File appears to be empty','err');return;}
+      fileHeaders=data[0].map(h=>String(h).trim());
+      parsedRows=data.slice(1).filter(r=>r.some(c=>c!==''));
+      document.getElementById('fileName').textContent=file.name;
+      document.getElementById('fileRowCount').textContent=`${parsedRows.length} rows`;
+      document.getElementById('fileInfo').style.display='flex';
+      populateColumnSelectors();
+      document.getElementById('colMap').classList.add('visible');
+      autoMapColumns();
+      toast(`Loaded ${parsedRows.length} rows from ${file.name}`,'ok');
+    }catch(err){toast('Could not read file: '+err.message,'err');}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function populateColumnSelectors(){
+  ['colName','colPhone','colTitle','colCompany'].forEach((id,i)=>{
+    const sel=document.getElementById(id);
+    const firstOpt=i>=2?'<option value="">— none —</option>':'<option value="">— select —</option>';
+    sel.innerHTML=firstOpt+fileHeaders.map((h,j)=>`<option value="${j}">${h}</option>`).join('');
+  });
+}
+
+function autoMapColumns(){
+  // Smart auto-detect columns by header name
+  const namePatterns=/name|contact|full.?name|person/i;
+  const phonePatterns=/phone|mobile|cell|whatsapp|number|contact.?no/i;
+  const titlePatterns=/title|role|position|designation|job/i;
+  const companyPatterns=/company|org|employer|firm|brand/i;
+  fileHeaders.forEach((h,i)=>{
+    if(namePatterns.test(h)) document.getElementById('colName').value=i;
+    if(phonePatterns.test(h)) document.getElementById('colPhone').value=i;
+    if(titlePatterns.test(h)) document.getElementById('colTitle').value=i;
+    if(companyPatterns.test(h)) document.getElementById('colCompany').value=i;
+  });
+}
+
+function clearFile(){
+  parsedRows=[];fileHeaders=[];
+  document.getElementById('fileInput').value='';
+  document.getElementById('fileInfo').style.display='none';
+  document.getElementById('colMap').classList.remove('visible');
+}
+
+function importContacts(){
+  const nameIdx=document.getElementById('colName').value;
+  const phoneIdx=document.getElementById('colPhone').value;
+  if(nameIdx===''||phoneIdx===''){toast('Please map at least Name and Phone columns','err');return;}
+  const titleIdx=document.getElementById('colTitle').value;
+  const companyIdx=document.getElementById('colCompany').value;
+  const statusEl=document.getElementById('importStatus');
+  statusEl.innerHTML=`<div class="status-msg"><div class="loader"><div class="ldot"></div><div class="ldot"></div><div class="ldot"></div></div>Importing...</div>`;
+  let imported=0,skipped=0;
+  contacts=parsedRows.map(row=>{
+    const name=String(row[nameIdx]||'').trim();
+    let phone=String(row[phoneIdx]||'').trim().replace(/[\s\-().]/g,'');
+    if(!name||!phone){skipped++;return null;}
+    // Normalise Indian numbers
+    if(phone.startsWith('0'))phone='+91'+phone.slice(1);
+    if(/^[6-9]\d{9}$/.test(phone))phone='+91'+phone;
+    if(!phone.startsWith('+'))phone='+'+phone;
+    const fn=name.split(' ')[0]||name;
+    const ln=name.split(' ').slice(-1)[0]||'';
+    imported++;
+    return{
+      name,
+      initials:`${fn[0]||'?'}${ln[0]||fn[1]||'?'}`.toUpperCase(),
+      jobTitle:titleIdx!==''?String(row[titleIdx]||'').trim()||'—':'—',
+      company:companyIdx!==''?String(row[companyIdx]||'').trim()||'—':'—',
+      location:'',skills:[],experience:'',
+      phone:phone,fromExcel:true
+    };
+  }).filter(Boolean);
+  statusEl.innerHTML='';
+  if(contacts.length===0){toast('No valid contacts found. Check Name and Phone columns','err');return;}
+  toast(`Imported ${contacts.length} contacts${skipped>0?`, ${skipped} skipped (missing data)`:''}`,'ok');
+  finishLoad(`${contacts.length} contacts imported from file`);
+}
+
+function finishLoad(msg){
+  const statusEl=document.getElementById(currentSource==='search'?'sStatus':'importStatus');
+  if(statusEl) statusEl.innerHTML=`<div class="status-msg ok"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>${msg}</div>`;
   renderCandidates();
   renderTemplates();
   applyTemplate();
+  setStep(2);show('sec2');show('sec3');show('sec4');
+}
 
-  document.getElementById('sStatus').innerHTML=`<div class="status-msg ok"><svg width="14" height="14" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>${contacts.length} candidates found</div>`;
-
-  setStep(2);
-  show('sec2'); show('sec3'); show('sec4');
-  btn.disabled=false;
+/* ── SAMPLE DOWNLOAD ── */
+function downloadSample(){
+  const wb=XLSX.utils.book_new();
+  const data=[
+    ['Name','Phone','Job Title','Company'],
+    ['Rahul Sharma','+91 98100 12345','Marketing Manager','Acme Corp'],
+    ['Priya Patel','+91 99100 67890','Sales Executive','TechCo'],
+    ['Amit Singh','9810023456','Developer','Startup Ltd'],
+    ['Neha Gupta','09876543210','Designer','Agency Inc']
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:20},{wch:18},{wch:20},{wch:20}];
+  XLSX.utils.book_append_sheet(wb,ws,'Contacts');
+  XLSX.writeFile(wb,'hirereach_sample.xlsx');
+  toast('Sample template downloaded!','ok');
 }
 
 /* ── RENDER CANDIDATES ── */
 function renderCandidates(){
   const g=document.getElementById('cGrid');
-  g.innerHTML=''; sel.clear();
+  g.innerHTML='';sel.clear();
   contacts.forEach((c,i)=>{
     sel.add(i);
     const d=document.createElement('div');
-    d.className='cand-card sel'; d.id='cc'+i; d.onclick=()=>tog(i);
+    d.className='cand-card sel';d.id='cc'+i;d.onclick=()=>tog(i);
     const tags=(c.skills||[]).map(s=>`<span class="skill-tag">${s}</span>`).join('');
-    d.innerHTML=`
-      <div class="cand-chk" id="chk${i}">✓</div>
-      <div class="cand-av">${c.initials}</div>
+    const metaExtra=c.fromExcel
+      ?`${c.jobTitle!=='—'?`<div class="cand-meta">${c.jobTitle}</div>`:''}${c.company!=='—'?`<div class="cand-meta">${c.company}</div>`:''}`
+      :`<div class="cand-meta">${c.jobTitle}</div><div class="cand-meta">${c.company} · ${c.location}</div><div class="cand-meta">${c.experience} exp.</div>${tags?`<div class="skill-tags">${tags}</div>`:''}`;
+    d.innerHTML=`<div class="cand-chk" id="chk${i}">✓</div>
+      <div class="cand-av">${c.initials||'??'}</div>
       <div class="cand-name">${c.name}</div>
-      <div class="cand-meta">${c.jobTitle}</div>
-      <div class="cand-meta">${c.company} · ${c.location}</div>
-      <div class="cand-meta">${c.experience} exp.</div>
-      <div class="skill-tags">${tags}</div>
+      ${metaExtra}
       <div class="cand-phone">${c.phone}</div>`;
     g.appendChild(d);
   });
   refUI();
 }
 
-function tog(i){
-  const card=document.getElementById('cc'+i),chk=document.getElementById('chk'+i);
-  if(sel.has(i)){sel.delete(i);card.classList.remove('sel');chk.textContent='';}
-  else{sel.add(i);card.classList.add('sel');chk.textContent='✓';}
-  refUI();
-}
+function tog(i){const card=document.getElementById('cc'+i),chk=document.getElementById('chk'+i);if(sel.has(i)){sel.delete(i);card.classList.remove('sel');chk.textContent='';}else{sel.add(i);card.classList.add('sel');chk.textContent='✓';}refUI();}
 function selAll(){contacts.forEach((_,i)=>{sel.add(i);const c=document.getElementById('cc'+i);if(c){c.classList.add('sel');document.getElementById('chk'+i).textContent='✓';}});refUI();}
 function deselAll(){contacts.forEach((_,i)=>{sel.delete(i);const c=document.getElementById('cc'+i);if(c){c.classList.remove('sel');document.getElementById('chk'+i).textContent='';}});refUI();}
-
-function refUI(){
-  const n=sel.size;
-  document.getElementById('selLabel').textContent=`${n} of ${contacts.length} selected`;
-  const pill=document.getElementById('selPill');
-  if(n>0){pill.style.display='';pill.textContent=n;}else pill.style.display='none';
-  document.getElementById('contBtn').disabled=(n===0);
-  document.getElementById('sendBtn').disabled=(n===0);
-}
+function refUI(){const n=sel.size;document.getElementById('selLabel').textContent=`${n} of ${contacts.length} selected`;const pill=document.getElementById('selPill');if(n>0){pill.style.display='';pill.textContent=n;}else pill.style.display='none';document.getElementById('contBtn').disabled=(n===0);document.getElementById('sendBtn').disabled=(n===0);}
 function goMsg(){setStep(3);document.getElementById('sec3').scrollIntoView({behavior:'smooth',block:'start'});}
+
+/* ── TEMPLATES ── */
+const TEMPLATES=[
+  {name:'Friendly & Direct',desc:'Warm, concise, professional',build:(r,l)=>`Hi [Name]! 👋\n\nI came across your profile and I'm genuinely impressed with your background${r?` in ${r}`:''}.\n\nWe're hiring${r?` a ${r}`:''} to join our growing team${l?` in ${l}`:''}. Strong growth, great culture, competitive pay.\n\nReply YES to learn more, or NO to opt out.\n\nLooking forward to connecting! 🙌\n[Your Name]`},
+  {name:'Bold & Energetic',desc:'Exciting, startup-feel',build:(r,l)=>`Hey [Name]! 🚀\n\nBig things are happening — and I think you should be part of it.\n\nWe're looking for${r?` a ${r}`:' a star performer'}${l?` in ${l}`:''}. Fast-paced, real ownership, amazing team.\n\nReply YES to get the full scoop, or NO to opt out.\n\n[Your Name]`},
+  {name:'Respectful & Formal',desc:'Professional, corporate tone',build:(r,l)=>`Dear [Name],\n\nI hope this message finds you well. I'm reaching out regarding an exciting career opportunity${r?` for a ${r}`:''}${l?` in ${l}`:''}.\n\nI believe you could be an excellent fit for our team.\n\nReply YES if you'd like to learn more, or NO to opt out.\n\nBest regards,\n[Your Name]`},
+  {name:'Short & Punchy',desc:'Ultra-brief, high response rate',build:(r,l)=>`Hi [Name] 👋\n\nQuick one — are you open to a${r?` ${r}` :' new role'}${l?` in ${l}`:''}?\n\nGreat team, good pay, real growth.\n\nReply YES to know more or NO to opt out.\n\n[Your Name]`},
+  {name:'Value-First',desc:'Lead with what they gain',build:(r,l)=>`Hi [Name],\n\nWhat if your next move came with better pay, an amazing team, and real career growth? 💼\n\nI'm hiring${r?` for a ${r}`:''}${l?` in ${l}`:''}.\n\nReply YES and I'll share all the details, or NO to opt out.\n\nCheers,\n[Your Name]`}
+];
+
+function renderTemplates(){
+  const g=document.getElementById('tplGrid');g.innerHTML='';
+  TEMPLATES.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='tpl-card'+(i===currentTplIdx?' active':'');
+    d.onclick=()=>{currentTplIdx=i;renderTemplates();applyTemplate();};
+    d.innerHTML=`<div class="tpl-name">${t.name}</div><div class="tpl-desc">${t.desc}</div>`;
+    g.appendChild(d);
+  });
+}
+function applyTemplate(){
+  const r=document.getElementById('iRole').value.trim();
+  const l=document.getElementById('iLoc').value.trim();
+  document.getElementById('msgEd').value=TEMPLATES[currentTplIdx].build(r,l);
+}
+function shuffleTemplate(){currentTplIdx=(currentTplIdx+1)%TEMPLATES.length;renderTemplates();applyTemplate();}
 
 /* ── SEND ── */
 function sendAll(){
@@ -570,40 +613,35 @@ function sendAll(){
   });
   sentCount=list.length;
   document.getElementById('mSent').textContent=sentCount;
-  document.getElementById('sendNote').textContent=`WhatsApp opened for ${list.length} candidate(s)`;
+  document.getElementById('sendNote').textContent=`WhatsApp opened for ${list.length} contact(s)`;
   const en=document.getElementById('emptyNote');
-  if(en)en.textContent=`Messages sent to ${list.length} candidate(s) — waiting for replies...`;
+  if(en)en.textContent=`Messages sent to ${list.length} contact(s) — waiting for replies...`;
   setStep(4);
   document.getElementById('sec4').scrollIntoView({behavior:'smooth',block:'start'});
-  toast(`Opened WhatsApp for ${list.length} candidate(s)!`,'ok');
+  toast(`WhatsApp opened for ${list.length} contact(s)!`,'ok');
 }
 
 /* ── SIMULATE ── */
 function sim(type){
-  if(!contacts.length){toast('Search for candidates first','err');return;}
+  if(!contacts.length){toast('Load contacts first','err');return;}
   const c=contacts[Math.floor(Math.random()*contacts.length)];
-  const isYes=(type==='yes');
+  const isYes=type==='yes';
   if(isYes)yesC++;else noC++;
   if(sentCount===0){sentCount=contacts.length;document.getElementById('mSent').textContent=sentCount;}
   const rate=Math.round(((yesC+noC)/sentCount)*100);
   document.getElementById('mYes').textContent=yesC;
   document.getElementById('mNo').textContent=noC;
   document.getElementById('mRate').textContent=rate+'%';
-
   const feed=document.getElementById('notifFeed');
-  const en=document.getElementById('emptyNote');
-  if(en)en.remove();
-
+  const en=document.getElementById('emptyNote');if(en)en.remove();
   const time=new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-  const item=document.createElement('div');
-  item.className='notif-item';
-  item.innerHTML=`
-    <div class="notif-ping" style="background:${isYes?'#25D366':'#ff5757'}"></div>
-    <div class="notif-av">${c.initials}</div>
+  const item=document.createElement('div');item.className='notif-item';
+  item.innerHTML=`<div class="notif-ping" style="background:${isYes?'#25D366':'#ff5757'}"></div>
+    <div class="notif-av">${c.initials||'??'}</div>
     <div class="notif-body">
       <div class="notif-name">${c.name}</div>
-      <div class="notif-sub">${c.jobTitle} · ${c.company} · ${c.location}</div>
-      <div class="notif-status" style="color:${isYes?'#25D366':'#ff5757'}">${isYes?'Replied YES — interested in the role':'Replied NO — not interested at this time'}</div>
+      <div class="notif-sub">${c.jobTitle!=='—'?c.jobTitle+' · ':''} ${c.phone}</div>
+      <div class="notif-status" style="color:${isYes?'#25D366':'#ff5757'}">${isYes?'Replied YES — interested':'Replied NO — not interested'}</div>
     </div>
     <div class="notif-time">${time}</div>`;
   feed.prepend(item);
@@ -611,15 +649,15 @@ function sim(type){
 }
 
 /* ── HELPERS ── */
-function setAllCandidates(){
-  document.getElementById('iCount').value='';
-  document.getElementById('iCount').placeholder='All';
-  document.getElementById('iCount').dataset.all='1';
-  toast('Will generate all available candidates','ok');
-}
 function setStep(n){for(let i=1;i<=4;i++){const el=document.getElementById('si'+i);el.classList.remove('active','done');if(i<n)el.classList.add('done');else if(i===n)el.classList.add('active');}}
 function show(id){const el=document.getElementById(id);el.classList.add('visible');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);}
 function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);}
+
+/* ── DRAG & DROP on upload zone ── */
+const uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);});
 </script>
 </body>
 </html>
