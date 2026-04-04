@@ -185,12 +185,11 @@ textarea{resize:vertical;line-height:1.7}
       </div>
       <div class="field">
         <label>Number of candidates</label>
-        <select id="iCount">
-          <option value="6">6 candidates</option>
-          <option value="8">8 candidates</option>
-          <option value="10" selected>10 candidates</option>
-          <option value="12">12 candidates</option>
-        </select>
+        <div style="display:flex;gap:8px;align-items:stretch">
+          <input id="iCount" type="number" min="1" placeholder="e.g. 10" value="10" style="flex:1"/>
+          <button class="btn btn-sm" onclick="setAllCandidates()" style="white-space:nowrap;border-color:rgba(37,211,102,.3);color:var(--accent);background:rgba(37,211,102,.07)">Get all</button>
+        </div>
+        <span style="font-size:11px;color:var(--muted);margin-top:3px;display:block">Enter any number, or click "Get all" for 50+ candidates</span>
       </div>
     </div>
     <div class="btn-row">
@@ -477,7 +476,8 @@ async function doSearch(){
   const role=document.getElementById('iRole').value.trim();
   const loc=document.getElementById('iLoc').value.trim();
   const skills=document.getElementById('iSkills').value.trim();
-  const count=parseInt(document.getElementById('iCount').value);
+  const rawCount = document.getElementById('iCount').value.trim();
+  const count = rawCount === '' || rawCount === '0' ? 50 : Math.min(parseInt(rawCount) || 10, 200);
   if(!role&&!loc){toast('Please enter a job role or location','err');return;}
 
   const btn=document.getElementById('searchBtn');
@@ -594,6 +594,11 @@ function sim(type){
 }
 
 /* ── HELPERS ── */
+function setAllCandidates(){
+  document.getElementById('iCount').value='';
+  document.getElementById('iCount').placeholder='All (50+)';
+  toast('Will generate maximum candidates for your search','ok');
+}
 function setStep(n){for(let i=1;i<=4;i++){const el=document.getElementById('si'+i);el.classList.remove('active','done');if(i<n)el.classList.add('done');else if(i===n)el.classList.add('active');}}
 function show(id){const el=document.getElementById(id);el.classList.add('visible');setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);}
 function toast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type?' '+type:'');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);}
