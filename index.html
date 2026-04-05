@@ -838,8 +838,24 @@ function renderHistory(){
   }).join('');
 }
 
-function deleteCampaign(id){if(!confirm('Delete this campaign?'))return;saveCampaigns(loadCampaigns().filter(c=>c.id!==id));renderHistory();toast('Deleted');}
-function clearHistory(){if(!confirm('Delete ALL history?'))return;saveCampaigns([]);renderHistory();toast('Cleared');}
+function deleteCampaign(id){
+  if(!confirm('Delete this campaign?'))return;
+  saveCampaigns(loadCampaigns().filter(c=>c.id!==id));
+  renderHistory();
+  toast('Deleted');
+  // Delete from Google Sheets too
+  deleteFromSheets([id]);
+}
+function clearHistory(){
+  if(!confirm('Delete ALL history? This will also remove all records from Google Sheets.'))return;
+  const all = loadCampaigns();
+  const ids = all.map(c=>c.id);
+  saveCampaigns([]);
+  renderHistory();
+  toast('History cleared');
+  // Delete all from Google Sheets
+  if(ids.length) deleteFromSheets(ids);
+}
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function resumeCampaign(id){
@@ -1004,6 +1020,26 @@ function processResponses(responses, campaignId){
   if(changed){
     saveCampaigns(all);
     toast('New response received!','ok');
+  }
+}
+
+/* ════════════════════════════════
+   DELETE FROM GOOGLE SHEETS
+════════════════════════════════ */
+async function deleteFromSheets(campaignIds){
+  if(!campaignIds || !campaignIds.length) return;
+  try{
+    const res = await fetch('/api/response', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ campaignIds })
+    });
+    if(res.ok){
+      const data = await res.json();
+      console.log('Deleted from sheets:', data);
+    }
+  } catch(e){
+    console.warn('Could not delete from sheets:', e.message);
   }
 }
 
