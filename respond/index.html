@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HireReach — Your Response</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0b0c0f;color:#f0f1f3;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.card{background:#13151a;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:44px 36px;text-align:center;max-width:420px;width:100%;animation:up .4s ease}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:32px}
+.icon-q{background:rgba(74,158,255,.1);border:2px solid rgba(74,158,255,.3)}
+.icon-yes{background:rgba(37,211,102,.1);border:2px solid rgba(37,211,102,.35)}
+.icon-no{background:rgba(255,87,87,.08);border:2px solid rgba(255,87,87,.3)}
+.icon-err{background:rgba(255,181,71,.08);border:2px solid rgba(255,181,71,.25)}
+h1{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;line-height:1.25}
+p{font-size:14px;color:#7a7f8e;line-height:1.7}
+.btn-row{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.btn{padding:16px 28px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all .15s;flex:1;max-width:180px}
+.btn:active{transform:scale(.96)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-yes{background:#25D366;color:#000}
+.btn-yes:hover:not(:disabled){background:#1fbc58}
+.btn-no{background:rgba(255,87,87,.12);color:#ff5757;border:1px solid rgba(255,87,87,.3)}
+.btn-no:hover:not(:disabled){background:rgba(255,87,87,.22)}
+.spinner{width:44px;height:44px;border:3px solid rgba(255,255,255,.07);border-top-color:#25D366;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{margin-top:28px;font-size:11px;color:#2a2d35;border-top:1px solid rgba(255,255,255,.04);padding-top:16px}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="spinner"></div>
+  <p style="color:#7a7f8e;font-size:14px">Loading...</p>
+</div>
+<script>
+function qp(k){ return new URLSearchParams(window.location.search).get(k)||''; }
+
+const cId   = qp('c');
+const ctId  = qp('ct');
+const cName = decodeURIComponent(qp('n')) || 'there';
+
+function setCard(html){
+  document.getElementById('card').innerHTML = html +
+    '<div class="footer">Powered by HireReach</div>';
+}
+
+function showButtons(){
+  setCard(`
+    <div class="icon icon-q">👋</div>
+    <h1>Hi ${cName}!</h1>
+    <p style="margin-bottom:4px">Are you interested in this opportunity?</p>
+    <div class="btn-row">
+      <button class="btn btn-yes" id="btnYes" onclick="submit('yes')">✓ &nbsp;YES, interested</button>
+      <button class="btn btn-no"  id="btnNo"  onclick="submit('no')">✕ &nbsp;No thanks</button>
+    </div>`);
+}
+
+function showDone(type, already){
+  const y = type === 'yes';
+  setCard(`
+    <div class="icon ${y?'icon-yes':'icon-no'}">${y?'✓':'✕'}</div>
+    <h1>${already ? 'Already saved!' : (y ? "You're in! 🎉" : "Got it!")}</h1>
+    <p>${already
+      ? `Hi ${cName}, your response was already recorded.`
+      : y ? `Thanks ${cName}! We'll be in touch soon.`
+          : `Thanks ${cName}! No problem at all.`}</p>`);
+}
+
+function showErr(msg){
+  setCard(`
+    <div class="icon icon-err">!</div>
+    <h1>Oops!</h1>
+    <p>${msg||'Something went wrong. Please try again.'}</p>
+    <div class="btn-row" style="margin-top:20px">
+      <button class="btn btn-yes" onclick="location.reload()">Try again</button>
+    </div>`);
+}
+
+async function submit(type){
+  const y = document.getElementById('btnYes');
+  const n = document.getElementById('btnNo');
+  if(y) y.disabled = true;
+  if(n) n.disabled = true;
+
+  setCard(`<div class="spinner"></div><p style="color:#7a7f8e;font-size:14px">Saving your response...</p>`);
+
+  try{
+    const res = await fetch('/api/response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        campaignId: cId,
+        contactId:  ctId,
+        name:       cName,
+        type:       type,
+        time:       new Date().toISOString()
+      })
+    });
+    const data = await res.json();
+    if(data.already){ showDone(data.existingType || type, true); return; }
+    if(data.ok){ showDone(type, false); return; }
+    showErr(data.error || 'Could not save response.');
+  } catch(e){
+    showErr('Network error. Please check your connection and try again.');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function(){
+  if(!cId || !ctId){ showErr('Invalid or expired link.'); return; }
+  showButtons();
+});
+</script>
+</body>
+</html>
