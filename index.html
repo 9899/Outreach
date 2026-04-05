@@ -77,9 +77,8 @@ input[type=file]::file-selector-button{background:var(--bg4);border:1px solid va
 .src-btn.active{background:var(--accent);color:#000;font-weight:600}
 .src-panel{display:none}
 .src-panel.active{display:block}
-.upload-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r2);padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s}
 .upload-zone:hover,.upload-zone.drag{border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.03)}
-.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
 .upload-icon{width:40px;height:40px;margin:0 auto 12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;display:flex;align-items:center;justify-content:center}
 .upload-title{font-size:15px;font-weight:500;margin-bottom:4px}
 .upload-sub{font-size:12px;color:var(--muted)}
@@ -265,11 +264,17 @@ input[type=file]::file-selector-button{background:var(--bg4);border:1px solid va
     </div>
     <div class="src-panel" id="panelUpload">
       <p class="hint">Upload an Excel (.xlsx) or CSV file with your contacts.</p>
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" onchange="handleFile(this.files[0])"/>
+      <!-- Hidden real file input -->
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(this.files[0])"/>
+      <!-- Clickable zone that triggers the input -->
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
         <div class="upload-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15V4M8 8l4-4 4 4" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="#25D366" stroke-width="2" stroke-linecap="round"/></svg></div>
-        <div class="upload-title">Drop file here or click to browse</div>
+        <div class="upload-title">Click here to browse file</div>
         <div class="upload-sub">Supports <b>.xlsx</b>, <b>.xls</b>, <b>.csv</b> — unlimited rows</div>
+        <button class="btn btn-primary btn-sm" style="margin-top:14px;pointer-events:none">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M10 13V4M6 7l4-4 4 4M4 16h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Choose file
+        </button>
       </div>
       <div id="fileInfo" style="display:none" class="file-info">
         <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="2" stroke="#25D366" stroke-width="1.5"/><path d="M7 7h6M7 10h6M7 13h4" stroke="#25D366" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -406,7 +411,7 @@ input[type=file]::file-selector-button{background:var(--bg4);border:1px solid va
 const SK='hirereach_v2';
 // ── PASTE YOUR GOOGLE APPS SCRIPT WEBHOOK URL HERE ──
 // ▶▶▶ PASTE YOUR GOOGLE APPS SCRIPT URL BETWEEN THE QUOTES BELOW ◀◀◀
-const WEBHOOK_URL ='https://script.google.com/macros/s/AKfycbzUKpTKCy3qP6nC3J4N1dasRb28yBVUXWri6vqsg4AohrdhTzCNxpmO3KO1qaoGK8kI/exec';
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzUKpTKCy3qP6nC3J4N1dasRb28yBVUXWri6vqsg4AohrdhTzCNxpmO3KO1qaoGK8kI/exec';
 // Example: 'https://script.google.com/macros/s/AKfycbXXXX/exec'
 function loadCampaigns(){try{return JSON.parse(localStorage.getItem(SK)||'[]');}catch{return[];}}
 function saveCampaigns(a){localStorage.setItem(SK,JSON.stringify(a));updateHistBadge();}
@@ -1010,9 +1015,9 @@ function toast(msg,type=''){const t=document.getElementById('toast');t.textConte
    DRAG DROP
 ════════════════════════════════ */
 const uz=document.getElementById('uploadZone');
-uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
-uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
-uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);});
+uz.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();uz.classList.add('drag');});
+uz.addEventListener('dragleave',e=>{e.stopPropagation();uz.classList.remove('drag');});
+uz.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();uz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);});
 
 /* ════════════════════════════════
    INIT — check for incoming response link
