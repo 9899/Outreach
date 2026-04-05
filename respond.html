@@ -36,10 +36,6 @@ p{font-size:14px;color:#7a7f8e;line-height:1.7}
   <p style="color:#7a7f8e;font-size:14px">Loading...</p>
 </div>
 <script>
-// ── PASTE YOUR GOOGLE APPS SCRIPT WEBHOOK URL HERE ──
-// ▶▶▶ PASTE YOUR GOOGLE APPS SCRIPT URL BETWEEN THE QUOTES BELOW ◀◀◀
-const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzUKpTKCy3qP6nC3J4N1dasRb28yBVUXWri6vqsg4AohrdhTzCNxpmO3KO1qaoGK8kI/exec';
-
 function qp(k){ return new URLSearchParams(window.location.search).get(k)||''; }
 const cId   = qp('c');
 const ctId  = qp('ct');
@@ -50,7 +46,6 @@ function setCard(html){
   document.getElementById('card').innerHTML = html +
     '<div class="footer">Powered by HireReach</div>';
 }
-
 function showButtons(){
   setCard(`
     <div class="icon icon-q">👋</div>
@@ -61,23 +56,20 @@ function showButtons(){
       <button class="btn btn-no"  id="bN" onclick="submit('no')">✕ &nbsp;No thanks</button>
     </div>`);
 }
-
-function showDone(type, already){
+function showDone(type){
   const y = type==='yes';
   setCard(`
     <div class="icon ${y?'icon-yes':'icon-no'}">${y?'✓':'✕'}</div>
-    <h1>${already?'Already saved!':(y?"You're in! 🎉":"Got it!")}</h1>
-    <p>${already
-      ? `Hi ${cName}, your response is already recorded.`
-      : y ? `Thanks ${cName}! We'll be in touch soon.`
-          : `Thanks ${cName}! No problem at all.`}</p>`);
+    <h1>${y?"You're in! 🎉":"Got it!"}</h1>
+    <p>${y
+      ? `Thanks ${cName}! Your interest has been recorded. We'll be in touch soon.`
+      : `Thanks ${cName}! No problem at all.`}</p>`);
 }
-
-function showErr(){
+function showErr(msg){
   setCard(`
     <div class="icon icon-err">!</div>
     <h1>Oops!</h1>
-    <p>Something went wrong. Please try again.</p>
+    <p>${msg||'Something went wrong. Please try again.'}</p>
     <div class="btn-row" style="margin-top:20px">
       <button class="btn btn-yes" onclick="showButtons()">Try again</button>
     </div>`);
@@ -85,34 +77,35 @@ function showErr(){
 
 async function submit(type){
   document.querySelectorAll('.btn').forEach(b=>b.disabled=true);
-  setCard(`<div class="spinner"></div><p style="color:#7a7f8e;font-size:14px">Saving...</p>`);
-
-  const payload = { campaignId:cId, contactId:ctId, name:cName, phone:cPhone, type, time:new Date().toISOString() };
-
-  // Try webhook (Google Apps Script)
-  if(WEBHOOK_URL){
-    try{
-      await fetch(WEBHOOK_URL, {
-        method:'POST',
-        mode:'no-cors', // Google Apps Script requires no-cors
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(payload)
-      });
-      // no-cors means we can't read the response — assume success
-      showDone(type, false);
-      return;
-    }catch(e){ console.warn('Webhook failed:', e); }
+  setCard(`<div class="spinner"></div><p style="color:#7a7f8e;font-size:14px">Saving your response...</p>`);
+  try{
+    // Call our own Vercel proxy — no CORS issues
+    const res = await fetch('/api/response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        campaignId: cId,
+        contactId:  ctId,
+        name:       cName,
+        phone:      cPhone,
+        type:       type,
+        time:       new Date().toISOString()
+      })
+    });
+    if(res.ok){
+      showDone(type);
+    } else {
+      showErr('Could not save. Please try again.');
+    }
+  } catch(e){
+    showErr('Network error. Please check your connection.');
   }
-
-  // Fallback — still show success to candidate
-  // (recruiter can mark manually)
-  showDone(type, false);
 }
 
 window.addEventListener('DOMContentLoaded', function(){
-  if(!cId || !ctId){ 
+  if(!cId || !ctId){
     setCard(`<div class="icon icon-err">!</div><h1>Invalid link</h1><p>This response link is invalid or has expired.</p><div class="footer">Powered by HireReach</div>`);
-    return; 
+    return;
   }
   showButtons();
 });
