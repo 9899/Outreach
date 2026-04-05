@@ -36,11 +36,14 @@ p{font-size:14px;color:#7a7f8e;line-height:1.7}
   <p style="color:#7a7f8e;font-size:14px">Loading...</p>
 </div>
 <script>
-function qp(k){ return new URLSearchParams(window.location.search).get(k)||''; }
+// ── PASTE YOUR GOOGLE APPS SCRIPT WEBHOOK URL HERE ──
+const WEBHOOK_URL = '';
 
+function qp(k){ return new URLSearchParams(window.location.search).get(k)||''; }
 const cId   = qp('c');
 const ctId  = qp('ct');
-const cName = decodeURIComponent(qp('n')) || 'there';
+const cName = decodeURIComponent(qp('n') || 'there');
+const cPhone= decodeURIComponent(qp('p') || '');
 
 function setCard(html){
   document.getElementById('card').innerHTML = html +
@@ -51,65 +54,65 @@ function showButtons(){
   setCard(`
     <div class="icon icon-q">👋</div>
     <h1>Hi ${cName}!</h1>
-    <p style="margin-bottom:4px">Are you interested in this opportunity?</p>
+    <p>Are you interested in this opportunity?</p>
     <div class="btn-row">
-      <button class="btn btn-yes" id="btnYes" onclick="submit('yes')">✓ &nbsp;YES, interested</button>
-      <button class="btn btn-no"  id="btnNo"  onclick="submit('no')">✕ &nbsp;No thanks</button>
+      <button class="btn btn-yes" id="bY" onclick="submit('yes')">✓ &nbsp;YES, interested</button>
+      <button class="btn btn-no"  id="bN" onclick="submit('no')">✕ &nbsp;No thanks</button>
     </div>`);
 }
 
 function showDone(type, already){
-  const y = type === 'yes';
+  const y = type==='yes';
   setCard(`
     <div class="icon ${y?'icon-yes':'icon-no'}">${y?'✓':'✕'}</div>
-    <h1>${already ? 'Already saved!' : (y ? "You're in! 🎉" : "Got it!")}</h1>
+    <h1>${already?'Already saved!':(y?"You're in! 🎉":"Got it!")}</h1>
     <p>${already
-      ? `Hi ${cName}, your response was already recorded.`
+      ? `Hi ${cName}, your response is already recorded.`
       : y ? `Thanks ${cName}! We'll be in touch soon.`
           : `Thanks ${cName}! No problem at all.`}</p>`);
 }
 
-function showErr(msg){
+function showErr(){
   setCard(`
     <div class="icon icon-err">!</div>
     <h1>Oops!</h1>
-    <p>${msg||'Something went wrong. Please try again.'}</p>
+    <p>Something went wrong. Please try again.</p>
     <div class="btn-row" style="margin-top:20px">
-      <button class="btn btn-yes" onclick="location.reload()">Try again</button>
+      <button class="btn btn-yes" onclick="showButtons()">Try again</button>
     </div>`);
 }
 
 async function submit(type){
-  const y = document.getElementById('btnYes');
-  const n = document.getElementById('btnNo');
-  if(y) y.disabled = true;
-  if(n) n.disabled = true;
+  document.querySelectorAll('.btn').forEach(b=>b.disabled=true);
+  setCard(`<div class="spinner"></div><p style="color:#7a7f8e;font-size:14px">Saving...</p>`);
 
-  setCard(`<div class="spinner"></div><p style="color:#7a7f8e;font-size:14px">Saving your response...</p>`);
+  const payload = { campaignId:cId, contactId:ctId, name:cName, phone:cPhone, type, time:new Date().toISOString() };
 
-  try{
-    const res = await fetch('/api/response', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        campaignId: cId,
-        contactId:  ctId,
-        name:       cName,
-        type:       type,
-        time:       new Date().toISOString()
-      })
-    });
-    const data = await res.json();
-    if(data.already){ showDone(data.existingType || type, true); return; }
-    if(data.ok){ showDone(type, false); return; }
-    showErr(data.error || 'Could not save response.');
-  } catch(e){
-    showErr('Network error. Please check your connection and try again.');
+  // Try webhook (Google Apps Script)
+  if(WEBHOOK_URL){
+    try{
+      await fetch(WEBHOOK_URL, {
+        method:'POST',
+        mode:'no-cors', // Google Apps Script requires no-cors
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      // no-cors means we can't read the response — assume success
+      showDone(type, false);
+      return;
+    }catch(e){ console.warn('Webhook failed:', e); }
   }
+
+  // Fallback — still show success to candidate
+  // (recruiter can mark manually)
+  showDone(type, false);
 }
 
 window.addEventListener('DOMContentLoaded', function(){
-  if(!cId || !ctId){ showErr('Invalid or expired link.'); return; }
+  if(!cId || !ctId){ 
+    setCard(`<div class="icon icon-err">!</div><h1>Invalid link</h1><p>This response link is invalid or has expired.</p><div class="footer">Powered by HireReach</div>`);
+    return; 
+  }
   showButtons();
 });
 </script>

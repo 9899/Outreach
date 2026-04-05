@@ -400,6 +400,8 @@ input[type=file]::file-selector-button{background:var(--bg4);border:1px solid va
    STORAGE
 ════════════════════════════════ */
 const SK='hirereach_v2';
+// ── PASTE YOUR GOOGLE APPS SCRIPT WEBHOOK URL HERE ──
+const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzUKpTKCy3qP6nC3J4N1dasRb28yBVUXWri6vqsg4AohrdhTzCNxpmO3KO1qaoGK8kI/exec';
 function loadCampaigns(){try{return JSON.parse(localStorage.getItem(SK)||'[]');}catch{return[];}}
 function saveCampaigns(a){localStorage.setItem(SK,JSON.stringify(a));updateHistBadge();}
 function updateHistBadge(){const a=loadCampaigns(),b=document.getElementById('histBadge');if(a.length){b.style.display='';b.textContent=a.length;}else b.style.display='none';}
@@ -426,11 +428,11 @@ function gotoPage(p){
    TRACKING LINK LOGIC
    Uses URL hash so it works on any host (no server needed)
 ════════════════════════════════ */
-function makeTrackLink(campaignId,contactId,contactName){
-  // Encode name in URL so respond page works on any device (no localStorage needed)
+function makeTrackLink(campaignId,contactId,contactName,contactPhone){
   const base=window.location.href.split('#')[0].split('?')[0].replace(/\/[^/]*$/, '');
   const n=encodeURIComponent(contactName||'');
-  return `${base}/respond/?c=${campaignId}&ct=${contactId}&n=${n}`;
+  const p=encodeURIComponent(contactPhone||'');
+  return `${base}/respond/?c=${campaignId}&ct=${contactId}&n=${n}&p=${p}`;
 }
 
 // Response handling is in /respond page
@@ -648,7 +650,7 @@ function sendAll(){
   document.getElementById('notifFeed').innerHTML='<div id="emptyNote" style="font-size:13px;color:var(--muted);padding:10px 0;text-align:center">Sent to '+list.length+' contacts — waiting for replies...</div>';
   list.forEach(c=>{
     // Build personalised message with tracking links
-    const trackLink=makeTrackLink(activeCampaignId,c.id,c.name.split(' ')[0]);
+    const trackLink=makeTrackLink(activeCampaignId,c.id,c.name.split(' ')[0],c.phone);
     let text=msgTemplate
       .replace(/\[Name\]/gi,c.name.split(' ')[0])
       .replace(/\[TRACK_LINK_YES\]/g,trackLink)
@@ -927,8 +929,10 @@ function stopPolling(){
 }
 
 async function pollOnce(campaignId){
+  if(!WEBHOOK_URL) return; // no webhook configured
   try{
-    const res = await fetch(`/api/response?campaignId=${campaignId}`);
+    // Google Apps Script GET — fetch responses for this campaign
+    const res = await fetch(`${WEBHOOK_URL}?campaignId=${campaignId}`);
     if(!res.ok) return;
     const data = await res.json();
     const responses = data.responses || [];
@@ -940,11 +944,8 @@ async function pollOnce(campaignId){
 
     let changed = false;
     responses.forEach(r=>{
-      // Check if already recorded
       const alreadyIn = (all[campIdx].responses||[]).find(x=>x.contactId===r.contactId);
       if(alreadyIn) return;
-
-      // New response — record it
       const ctIdx = all[campIdx].contacts.findIndex(x=>x.id===r.contactId);
       if(ctIdx>-1){
         all[campIdx].contacts[ctIdx].response = r.type;
@@ -955,8 +956,6 @@ async function pollOnce(campaignId){
       if(r.type==='yes') all[campIdx].yesCount=(all[campIdx].yesCount||0)+1;
       else               all[campIdx].noCount=(all[campIdx].noCount||0)+1;
       changed=true;
-
-      // Update live UI if this is the active campaign
       if(activeCampaignId===campaignId){
         const c = contacts.find(x=>x.id===r.contactId);
         if(c){
@@ -969,7 +968,6 @@ async function pollOnce(campaignId){
         }
       }
     });
-
     if(changed) saveCampaigns(all);
   }catch(e){}
 }
